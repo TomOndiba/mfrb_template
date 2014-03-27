@@ -45,28 +45,31 @@ switch ($page_type) {
 		$options['relationship'] = 'friend';
 		break;
 	default:
-		$title = elgg_echo('river:all');
+		$title = elgg_view_form('thewire/add', array('class' => 'thewire-form'));
+		$title .= elgg_view('input/urlshortener');
 		$page_filter = 'all';
 		break;
 }
+
+$content .= elgg_view('core/river/filter', array('selector' => $selector));
+
+$sidebar = elgg_view('river/mrfb_sidebar');
+$sidebar_alt = elgg_view('river/mrfb_sidebar_alt');
 
 $activity = elgg_list_river($options);
 if (!$activity) {
 	$activity = elgg_echo('river:none');
 }
 
-$content = elgg_view('core/river/filter', array('selector' => $selector));
-
-$sidebar = elgg_view('core/river/sidebar');
-
 $params = array(
-	'title' => $title,
+	'header' => $title,
 	'content' =>  $content . $activity,
 	'sidebar' => $sidebar,
+	'sidebar_alt' => $sidebar_alt,
 	'filter_context' => $page_filter,
 	'class' => 'elgg-river-layout',
 );
 
-$body = elgg_view_layout('content', $params);
+$body = elgg_view_layout('river', $params);
 
 echo elgg_view_page($title, $body);

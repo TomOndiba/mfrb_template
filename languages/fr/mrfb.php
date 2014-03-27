@@ -12,9 +12,7 @@
 
 
 $french = array(
-	/**
-	 * Home
-	 */
+
 
 );
 

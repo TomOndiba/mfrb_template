@@ -14,6 +14,7 @@
 
 include_once('js/init.php');
 include_once('js/history.php');
+include_once('js/inline_vendors.php');
 
 ?>
 

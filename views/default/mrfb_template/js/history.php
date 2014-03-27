@@ -85,13 +85,13 @@ mrfb.history.init = function() {
 				"[href*='/action/widgets/delete'],"+
 				"[href*='notifications/personal'],"+
 				"[href*='comment/edit'],"+
-				".elgg-menu-parent,"+
-				".noajaxified,"+
+				".noajax,"+
 				".ui-corner-all"+
 			")" // autocomplete popup
 		, function(e) {
 
 			elgg.trigger_hook('mrfb_history', 'click');
+			mrfb.history.progressBar('start');
 
 			var href = $(this).attr('href');
 			if (elgg.isUndefined(href) || href == '') return false; // skip if href is empty
@@ -201,10 +201,11 @@ mrfb.history.init = function() {
 						"input[type=submit]:not("+
 							"[id='thewire-submit-button'],"+
 							"[id='button-signin'],"+
-							"[class*='noajaxified'])"
+							"[class*='noajax'])"
 		, function(e) {
 
 			elgg.trigger_hook('mrfb_history', 'submit');
+			mrfb.history.progressBar('start');
 
 			var form = $(this).closest('form'),
 				dataForm = form.serialize(),
@@ -362,6 +363,9 @@ mrfb.history.loadPage = function(url, data) {
 	elgg.post(url, {
 		data: data.dataForm, // @todo Here it could be usefull to add some infos about browser type, screen size...
 		dataType: 'json',
+		complete: function() {
+			mrfb.history.progressBar('stop');
+		},
 		success: function(response, textStatus, xmlHttp) {
 
 			elgg.trigger_hook('mrfb_history', 'success');
@@ -396,7 +400,7 @@ mrfb.history.loadPage = function(url, data) {
 
 				} else if (!response.forward_url) { // So this is a page
 
-					var respBody = $(response.body),
+					var $respBody = $(response.body),
 						orignParsed = data.origin ? elgg.parse_url(data.origin) : false,
 						urlOffset = !elgg.isUndefined(urlParsed.query) ? urlParsed.query.match(/offset=(\d+)/) : false;
 
@@ -406,11 +410,11 @@ mrfb.history.loadPage = function(url, data) {
 						var numOrigin = elgg.isUndefined(orignParsed.query) ? 0 : parseInt(orignParsed.query.match(/offset=(\d+)/)[1]),
 							numDest = parseInt(urlOffset[1]);
 
-						$('.elgg-page-body .elgg-layout:visible .elgg-main .elgg-pagination').html(respBody.find('.elgg-main .elgg-pagination').html());
+						$('.elgg-page-body .elgg-layout:visible .elgg-main .elgg-pagination').html($respBody.find('.elgg-main .elgg-pagination').html());
 						if (numOrigin < numDest) {
 							var u = $('.elgg-page-body .elgg-layout:visible .elgg-main .elgg-list'),
 								slideWidth = u.outerWidth(true),
-								v = respBody.find('.elgg-main .elgg-list').clone().css({
+								v = $respBody.find('.elgg-main .elgg-list').clone().css({
 									position: 'absolute',
 									top: u.position().top,
 									left: slideWidth
@@ -422,7 +426,7 @@ mrfb.history.loadPage = function(url, data) {
 						} else {
 							var u = $('.elgg-page-body .elgg-layout:visible .elgg-main .elgg-list'),
 								slideWidth = u.outerWidth(true),
-								v = respBody.find('.elgg-main .elgg-list').clone().css({
+								v = $respBody.find('.elgg-main .elgg-list').clone().css({
 									position: 'absolute',
 									top: u.position().top,
 									right: slideWidth
@@ -437,7 +441,9 @@ mrfb.history.loadPage = function(url, data) {
 						var $epb = $('.elgg-page-body > .elgg-inner');
 						stashDeck();
 						$epb.children().not('.elgg-layout.hidden').remove();
-						$epb.append(respBody);
+						$epb.append($respBody.fadeIn());
+						$('.elgg-menu-site, .elgg-menu-topbar').remove();
+						$('.elgg-page-topbar > .elgg-inner').append($(response.topbar));
 						$('.deck-popup').not('.pinned').remove(); // remove non-pinned popup
 
 					}
@@ -461,6 +467,10 @@ mrfb.history.loadPage = function(url, data) {
 		error: function(response) {
 			console.log(response, 'error');
 			$('body').removeClass('ajaxLoading');
+			mrfb.history.progressBar('stop');
+		},
+		404: function() {
+			console.log('4Q4');
 		}
 		/*error: function(jqXHR, textStatus, errorThrown){
 			document.location.href = url;
@@ -533,6 +543,40 @@ mrfb.history.interceptHistory = function() {
 
 
 /**
+ * Progress bar
+ */
+mrfb.history.progressBar = function(action) {
+	var $p = $('#progress'),
+		progressTimeout;
+
+/*if (!NProgress.status) NProgress.set(0);
+
+var work = function() {
+setTimeout(function() {
+if (!NProgress.status) return;
+NProgress.trickle();
+work();
+}, Settings.trickleSpeed);
+};
+
+if (Settings.trickle) work();*/
+
+
+	if (action == 'start') {
+		$p.css({width: 0});
+		progressInterval = setInterval(function() {
+			var windowWidth = $(window).width(),
+				width = Math.min($p.width() + Math.floor(Math.random() * (windowWidth*0.2) + 50), windowWidth*0.9);
+			$p.animate({width: width}, 250);
+		}, 300);
+	} else if (action == 'stop') {
+		clearInterval(progressInterval);
+		$p.animate({width: '100%'}, 100);
+	}
+}
+
+
+/**
  * Reload js of plugins
  * @return {[type]} [description]
  */
@@ -549,6 +593,7 @@ mrfb.history.reloadJsFunctions = function() {
 	// Reload elgg core js
 //	elgg.trigger_hook('init', 'system');
 	elgg.ui.widgets.init();
+	elgg.eaam.init();
 /*	elgg.userpicker.init();
 	elgg.autocomplete.init();
 
@@ -560,8 +605,6 @@ mrfb.history.reloadJsFunctions = function() {
 	elgg.tags.init();
 	elgg.workflow.reload();
 	elgg.answers.init();
-	elgg.mrfb_pad.reload();
-	elgg.mrfb_template.reload();
 	elgg.decision.init();
 
 	// Reload autocomplete elgg.userpicker.userList @todo remove it for next version. Elgg 1.8.9 don't fix it

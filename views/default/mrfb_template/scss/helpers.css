@@ -1,0 +1,41 @@
+
+* { /* border and padding included in width */
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.t250 { /* transition 250ms */
+	-webkit-transition: all 250ms ease;
+	-moz-transition: all 250ms ease;
+	-ms-transition: all 250ms ease;
+	-o-transition: all 250ms ease;
+	transition: all 250ms ease;
+}
+.t500 { /* transition 500ms */
+	-webkit-transition: all 500ms ease;
+	-moz-transition: all 500ms ease;
+	-ms-transition: all 500ms ease;
+	-o-transition: all 500ms ease;
+	transition: all 500ms ease;
+}
+.rcw90 { /* clockwise 90° (sens des aiguilles d'une montre de 90°) */
+	-webkit-transform: rotateZ(90deg);
+	-moz-transform: rotateZ(90deg);
+	-o-transform: rotateZ(90deg);
+	-ms-transform: rotateZ(90deg);
+	transform: rotateZ(90deg);
+}
+.rccw90 { /* counterclockwise 90° (sens inverse des aiguilles d'une montre de 90°) */
+	-webkit-transform: rotateZ(-90deg);
+	-moz-transform: rotateZ(-90deg);
+	-o-transform: rotateZ(-90deg);
+	-ms-transform: rotateZ(-90deg);
+	transform: rotateZ(-90deg);
+}
+.rcw180 { /* clockwise 180° (sens des aiguilles d'une montre de 180°) */
+	-webkit-transform: rotateZ(180deg);
+	-moz-transform: rotateZ(180deg);
+	-o-transform: rotateZ(180deg);
+	-ms-transform: rotateZ(180deg);
+	transform: rotateZ(180deg);
+}

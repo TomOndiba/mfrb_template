@@ -18,7 +18,7 @@
  */
 $params['body'] = elgg_view('page/elements/body', $vars);
 if (!elgg_is_logged_in()) $params['body'] .= elgg_view('core/account/login_dropdown');
-
+$params['topbar'] = elgg_view('mrfb_template/page/topbar', $vars);
 
 
 /**
@@ -28,7 +28,7 @@ if (elgg_is_xhr()) {
 	if (empty($vars['title'])) {
 		$params['title'] = elgg_get_config('sitename');
 	} else {
-		$params['title'] = $vars['title'] . ' &nabla; ' . elgg_get_config('sitename');
+		$params['title'] = $vars['title'] . ' | ' . elgg_get_config('sitename');
 	}
 
 	if ($vars['sysmessages']) {
@@ -40,12 +40,12 @@ if (elgg_is_xhr()) {
 		);
 	}
 
-	ggouv_execute_js(elgg_view('ggouv_template/page/reinitialize_elgg'));
+	mrfb_execute_js(elgg_view('mrfb_template/page/reinitialize_elgg'));
 	$code = ''; // reset $code !
 
 	$params['js_code'] .= 'console.log("'. _elgg_services()->db->getQueryCount() .'", "queryCount");'; // uncomment to see number of SQL calls
 
-	foreach (ggouv_execute_js() as $code) {
+	foreach (mrfb_execute_js() as $code) {
 		$params['js_code'] .= $code;
 	}
 
@@ -64,75 +64,50 @@ if (elgg_is_xhr()) {
 
 // render content before head so that JavaScript and CSS can be loaded. See #4032
 $messages = elgg_view('page/elements/messages', array('object' => $vars['sysmessages']));
-$header_wrapper = elgg_view('ggouv_template/page/header_wrapper', $vars);
+$logo = elgg_view('output/url', array(
+	'id' => 'logo',
+	'href' => 'activity',
+	'text' => '<img src="' . elgg_get_site_url() . 'mod/mrfb_template/graphics/Logo_mrfb.png" class="float t500">'
+));
 
 
+$echo_btt = elgg_echo('back:to:top');
 $body = <<<__BODY
-<div id="overlay"></div>
 <div class="elgg-page elgg-page-default">
+
 	<div class="elgg-page-messages">
 		$messages
 	</div>
-__BODY;
 
+	<div id="progress"></div>
 
-if (elgg_is_logged_in()) {
-
-	$topbar = elgg_view('ggouv_template/page/vertical_menubar', $vars);
-	$slidr_left = elgg_view('ggouv_template/page/slidr_left');
-
-	$body .= <<<__BODY
 	<div class="elgg-page-topbar">
 		<div class="elgg-inner">
-			$topbar
+			<div id="toggle-sidebar" class="hidden fi-arrow-right"></div>
+			$logo
+			{$params['topbar']}
 		</div>
 	</div>
-	$slidr_left
-	$header_wrapper
-__BODY;
-
-} else {
-
-	$nologin_mainpage_header = elgg_view('ggouv_template/page/nologin_mainpage_header');
-
-	$body .= <<<__BODY
-	<div class="elgg-page-header">
-		<div class="elgg-inner-nolog">
-			$nologin_mainpage_header
-		</div>
-	</div>
-__BODY;
-
-}
-
-$body .= <<<__BODY
-	<div class="toggle-sidebar-button gwf hidden link">&#xac06;</div>
 
 	<div class="elgg-page-body">
 		<div class="elgg-inner">
 			{$params['body']}
 		</div>
 	</div>
-
 </div>
 
-<div id="goTop" class="t"><div class="gwf tooltip e" title="<?php echo elgg_echo('back:to:top'); ?>">&uarr;</div></div>
+<div id="goTop" class="t250"><div class="mrfb-icon tooltip e" title="{$echo_btt}"></div></div>
 __BODY;
 
 $body .= elgg_view('page/elements/foot');
 
 echo '<script type="text/javascript">console.log("'. _elgg_services()->db->getQueryCount() .'", "queryCount");</script>'; // uncomment to see number of SQL calls
 
+if (isset($vars['body_attrs'])) {
+	$params['body_attrs'] = $vars['body_attrs'];
+}
 
-// make attribute for body
-$class = elgg_get_context() == 'main' ? 'homepage t25' : 't25';
-if (!elgg_is_logged_in()) $class .= ' nolog';
-// warnings, this is override intial var @todo
-$vars['body_attrs'] = array(
-	'class' => $class
-);
-
-$head = elgg_view('ggouv_template/page/head', $vars['head']);
+$head = elgg_view('page/elements/head', $vars['head']);
 
 echo elgg_view('page/elements/html', array(
 	'head' => $head,
