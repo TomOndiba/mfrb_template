@@ -54,7 +54,6 @@ function mrfb_setup_head($hook, $type, $return, $params) {
  * Hook called in ajax output, here : /engine/classes/Elgg/ActionsService.php line 311
  */
 function mfrb_output_ajax_plugin_hook($hook, $type, $return, $params) {
-	global $fb; $fb->info($return, $params);
 	// Add code to be executed as javascript
 	$code = '';
 	foreach (mrfb_execute_js() as $code) {

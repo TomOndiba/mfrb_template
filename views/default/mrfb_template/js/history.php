@@ -363,7 +363,7 @@ mrfb.history.getPage = function(url, data) {
 		};
 
 	// if user go back to the deck-river and river is stashed, we show it and skip elgg.get
-	if (activityTab && $('#stash_'+urlToStashID(activityTab)).length) {
+	/*if (activityTab && $('#stash_'+urlToStashID(activityTab)).length) {
 		var $stash = $('#stash_'+urlToStashID(activityTab));
 
 		stashDeck();
@@ -373,7 +373,7 @@ mrfb.history.getPage = function(url, data) {
 		$('.deck-popup').not('.pinned').remove(); // remove non-pinned popup
 		if (data.callback) data.callback();
 		return true;
-	}
+	}*/
 
 	elgg.get(url, {
 		data: data.dataForm, // @todo Here it could be usefull to add some infos about browser type, screen size...
@@ -454,12 +454,12 @@ mrfb.history.getPage = function(url, data) {
 
 					} else {
 						var $epb = $('.elgg-page-body > .elgg-inner');
-						stashDeck();
+						//stashDeck();
 						$epb.children().not('.elgg-layout.hidden').remove();
 						$epb.append($respBody.fadeIn());
 						$('.elgg-menu-site, .elgg-menu-topbar').remove();
 						$('.elgg-page-topbar > .elgg-inner').append($(response.topbar));
-						$('.deck-popup').not('.pinned').remove(); // remove non-pinned popup
+						$('.elgg-popup').not('.pinned').remove(); // remove non-pinned popup
 
 					}
 
