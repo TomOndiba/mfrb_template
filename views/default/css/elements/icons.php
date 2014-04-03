@@ -14,10 +14,12 @@
 *************************************** */
 
 .elgg-icon {
-	background: transparent url(<?php echo elgg_get_site_url(); ?>_graphics/elgg_sprites.png) no-repeat left;
 	width: 16px;
 	height: 16px;
-	margin: 0 2px;
+	margin: -1px 2px;
+	font-family: "foundation-icons";
+	color: #333;
+	font-size: 1.2em;
 }
 .elgg-icon-arrow-left {
 	background-position: 0 -0px;
@@ -55,11 +57,11 @@
 .elgg-icon-cursor-drag-arrow {
 	background-position: 0 -198px;
 }
-.elgg-icon-delete-alt:hover {
-	background-position: 0 -216px;
+.elgg-icon-delete-alt:before {
+	content: "\f217";
 }
-.elgg-icon-delete-alt {
-	background-position: 0 -234px;
+.elgg-icon-delete-alt:hover:before {
+	color: red;
 }
 .elgg-icon-delete:hover {
 	background-position: 0 -252px;
@@ -158,8 +160,11 @@
 .elgg-icon-push-pin-alt {
 	background-position: 0 -720px;
 }
-.elgg-icon-push-pin {
-	background-position: 0 -738px;
+.elgg-icon-push-pin:before {
+	content: "\f1a4";
+}
+.elgg-icon-push-pin:hover:before {
+	color: green;
 }
 .elgg-icon-redo {
 	background-position: 0 -756px;
@@ -309,9 +314,9 @@
 	min-width: 31px;
 }
 
-/* ***************************************
+/***************************************
 	AVATAR ICONS
-*************************************** */
+****************************************/
 .elgg-avatar {
 	position: relative;
 	display: inline-block;

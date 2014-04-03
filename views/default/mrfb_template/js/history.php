@@ -7,7 +7,7 @@ elgg.provide('mrfb.history');
  * You can uncomment to log time and perform benchmark.
  */
 
-/*
+
 benchmarkTimeInit = new Date().getTime();
 benchmarkTimeHistory = 0;
 console.log(benchmarkTimeInit, 'init'); // Executed when the js loads and the user arrives for the first time on mrfb. elgg core could be not loaded.
@@ -45,16 +45,25 @@ mrfb.benchmark.done = function() { // Executed when page are loaded and all stuf
 	console.log(new Date().getTime()-benchmarkTimeHistory, 'done');
 };
 elgg.register_hook_handler('mrfb_history', 'done', mrfb.benchmark.done);
-*/
+
 
 
 
 /**
  * Function to initiate full ajax.
- * @return {[type]} [description]
  */
 mrfb.history.init = function() {
 	//var History = window.History;
+
+	$(window).bind('statechange', function() { //History.Adapter.bind(window, 'statechange', function(event) {
+		require(['history'], function() {
+			var state = History.getState();
+			if (state && elgg.trigger_hook('mrfb_history', 'statechange', state, true)) {
+				console.log('state', state);
+				mrfb.history.getPage(state.url, state.data);
+			}
+		});
+	});
 
 	//if (History.enabled) {
 		// Internal Helper
@@ -88,18 +97,31 @@ mrfb.history.init = function() {
 				".noajax,"+
 				".ui-corner-all"+
 			")" // autocomplete popup
-		, function(e) {
-
-			elgg.trigger_hook('mrfb_history', 'click');
-			mrfb.history.progressBar('start');
-
-			var href = $(this).attr('href');
-			if (elgg.isUndefined(href) || href == '') return false; // skip if href is empty
-			if (e.which == 2 || e.metaKey) return true; // Continue as normal for cmd clicks
-
+		, function(evt) {
 			var $this = $(this),
-				url = elgg.normalize_url(decodeURIComponent(href)),
-				urlParsed = elgg.parse_url(url),
+				href = $this.attr('href');
+
+			// We skip if href is null, undefined or empty. In case of...
+			if (elgg.isNullOrUndefined(href) || href === '') return false;
+
+			// We check if there is confirmation. Continue if not or user accept confirm dialog.
+			if ($this.hasClass('elgg-requires-confirmation') && !elgg.ui.requiresConfirmation($this)) return false;
+
+			var params = {
+				url: elgg.normalize_url(decodeURIComponent(href)),
+				$this: $this,
+				event: evt
+			};
+			$.extend(params, elgg.parse_url(params.url));
+
+			// Plugin can hook at this point to stop click event by returning false
+			if (!elgg.trigger_hook('mrfb_history', 'click', params, true)) return false;
+
+			// Continue as normal (open link in new tab) for cmd/ctrl+click
+			if (evt.which == 2 || evt.metaKey) return true;
+
+			var url = elgg.normalize_url(decodeURIComponent(href)),
+				parsedUrl = elgg.parse_url(url),
 				ExecAction = function(url, callback) {
 					elgg.action(url, {
 						success: function(json) {
@@ -108,92 +130,68 @@ mrfb.history.init = function() {
 					});
 				};
 
-			// first, verify if there is confirmation. Continue on true.
-			if (!$this.hasClass('elgg-requires-confirmation') || $this.hasClass('elgg-requires-confirmation') && elgg.ui.requiresConfirmation($this)) {
+			// if it's an actions, do action and skip history.
+			if (url.match('/action/friends/add')) {
+				ExecAction(url, function() {
+					var query = elgg.parse_url(url, 'query'),
+						friend = query.match(/friend=\d+/)[0],
+						stats = $('.user-stats li:first-child .stats');
 
-				// if it's an actions, do action and skip history.
-				if (url.match('/action/comments/delete')) {
-					ExecAction(url, function() {
-						$('#item-annotation-'+elgg.parse_str(urlParsed.query).annotation_id).css('background-color', '#FF7777').fadeOut();
-						if ($('#card-forms').length) elgg.workflow.addCommentonCard($this.closest('#card-forms').find('input[name="entity_guid"]').val(), -1);
-					});
-				} else if (url.match('/action/friends/add')) {
-					ExecAction(url, function() {
-						var query = elgg.parse_url(url, 'query'),
-							friend = query.match(/friend=\d+/)[0],
-							stats = $('.user-stats li:first-child .stats');
+					$('a.tooltip.add_friend[href*="'+friend+'"]').html('&#44033;'); // unicode AC01
+					$('a.elgg-button.add_friend[href*="'+friend+'"]').html(elgg.echo('friend:remove'));
+					$('a.add_friend[href*="'+friend+'"]')
+						.blur()
+						.removeClass('add_friend')
+						.addClass('remove_friend')
+						.attr({
+							href: elgg.get_site_url() + 'action/friends/remove?' + query,
+							title: elgg.echo('friend:remove')
+						});
+					stats.html(parseInt(stats.html())+1);
+				});
+			} else if (url.match('/action/friends/remove')) {
+				ExecAction(url, function() {
+					var query = elgg.parse_url(url, 'query'),
+						friend = query.match(/friend=\d+/)[0],
+						stats = $('.user-stats li:first-child .stats');
 
-						$('a.tooltip.add_friend[href*="'+friend+'"]').html('&#44033;'); // unicode AC01
-						$('a.elgg-button.add_friend[href*="'+friend+'"]').html(elgg.echo('friend:remove'));
-						$('a.add_friend[href*="'+friend+'"]')
-							.blur()
-							.removeClass('add_friend')
-							.addClass('remove_friend')
-							.attr({
-								href: elgg.get_site_url() + 'action/friends/remove?' + query,
-								title: elgg.echo('friend:remove')
-							});
-						stats.html(parseInt(stats.html())+1);
-					});
-				} else if (url.match('/action/friends/remove')) {
-					ExecAction(url, function() {
-						var query = elgg.parse_url(url, 'query'),
-							friend = query.match(/friend=\d+/)[0],
-							stats = $('.user-stats li:first-child .stats');
+					$('a.tooltip.remove_friend[href*="'+friend+'"]').html('&#44032;'); // unicode AC00
+					$('a.elgg-button.remove_friend[href*="'+friend+'"]').html(elgg.echo('friend:add'));
+					$('a.remove_friend[href*="'+friend+'"]')
+						.blur()
+						.removeClass('remove_friend')
+						.addClass('add_friend')
+						.attr({
+							href: elgg.get_site_url() + 'action/friends/add?' + query,
+							title: elgg.echo('friend:add')
+						});
+					stats.html(parseInt(stats.html())-1);
+				});
 
-						$('a.tooltip.remove_friend[href*="'+friend+'"]').html('&#44032;'); // unicode AC00
-						$('a.elgg-button.remove_friend[href*="'+friend+'"]').html(elgg.echo('friend:add'));
-						$('a.remove_friend[href*="'+friend+'"]')
-							.blur()
-							.removeClass('remove_friend')
-							.addClass('add_friend')
-							.attr({
-								href: elgg.get_site_url() + 'action/friends/add?' + query,
-								title: elgg.echo('friend:add')
-							});
-						stats.html(parseInt(stats.html())-1);
-					});
-				} else if (url.match('/action/river/delete')) {
-					ExecAction(url, function() {
-						$('.item-river-'+elgg.parse_str(urlParsed.query).id).css('background-color', '#FF7777').fadeOut();
-					});
-				} else if (url.match('/action/message/delete')) {
-					ExecAction(url, function() {
-						$('.elgg-list-item[data-object_guid="'+elgg.parse_str(urlParsed.query).guid+'"]').css('background-color', '#FF7777').fadeOut();
-					});
-				} else if (url.match('/action/workflow/delete')) {
-					ExecAction(url, function() {
-						var board_guid = elgg.parse_str(urlParsed.query).guid;
-						$('#elgg-object-'+board_guid).css('background-color', '#FF7777').fadeOut();
-						$('.workflow-sidebar .elgg-list-item.board-'+board_guid).css('background-color', '#FF7777').fadeOut();
-					});
-				} else if (url.match('/action/deck_river/network/delete')) {
-					ExecAction(url, function() {
-						var network_guid = elgg.parse_str(urlParsed.query).guid;
-						$('#elgg-object-'+network_guid).css('background-color', '#FF7777').fadeOut();
-						$('#thewire-network .net-profile input[value="'+network_guid+'"]').closest('.net-profile').remove();
-					});
+			// it's a link
+			} else {
+				var fragment = parsedUrl.fragment || false,
+					path_url = parsedUrl.path,
+					originUrl = elgg.normalize_url(decodeURIComponent(window.location.href)),
+					path_origin = elgg.parse_url(originUrl, 'path');
 
-				// it's a link
+				if (fragment && path_origin == path_url) { //same page, go to #hash
+					if ($('#'+fragment).length) $(window).scrollTo($('#'+fragment), 'slow', {offset:-60});
 				} else {
-					var fragment = urlParsed.fragment || false,
-						path_url = urlParsed.path,
-						url_origin = elgg.normalize_url(decodeURIComponent(window.location.href)),
-						path_origin = elgg.parse_url(url_origin, 'path');
-
-					if (fragment && path_origin == path_url) { //same page, go to #hash
-						if ($('#'+fragment).length) $(window).scrollTo($('#'+fragment), 'slow', {offset:-60});
-					} else if (path_origin == path_url && (
-								/workflow\/board/.test(path_url) ||
-								/members\/random/.test(path_url)
-							)) {
-						mrfb.history.loadPage(url);
-					} else {
-						mrfb.history.pushState({origin: url_origin, fragment: fragment}, null, url.split("#")[0]);
-					}
+					mrfb.history.progressBar('start');
+					mrfb.history.pushState({originUrl: originUrl, fragment: fragment}, null, url.split("#")[0]);
 				}
 			}
+
 			return false;
+		});
+
+		// Register hook handler for some actions.
+		mrfb.history.register_direct_action('/action/river/delete', function(params) {
+			params.$this.closest('.elgg-item').css('background-color', '#FF7777').fadeOut();
+		});
+		mrfb.history.register_direct_action('/action/comments/delete', function(params) {
+			$('#item-annotation-'+elgg.parse_str(params.query).annotation_id).css('background-color', '#FF7777').fadeOut();
 		});
 
 		// ajaxify submit forms
@@ -202,7 +200,7 @@ mrfb.history.init = function() {
 							"[id='thewire-submit-button'],"+
 							"[id='button-signin'],"+
 							"[class*='noajax'])"
-		, function(e) {
+		, function(evt) {
 
 			elgg.trigger_hook('mrfb_history', 'submit');
 			mrfb.history.progressBar('start');
@@ -225,7 +223,9 @@ mrfb.history.init = function() {
 				}
 			}
 
-			if (form.hasClass('elgg-form-editablecomments-edit')) { // Special for editable comment
+			if (form.hasClass('elgg-form-login')) { // redirect for login
+				return true;
+			} else if (form.hasClass('elgg-form-editablecomments-edit')) { // Special for editable comment
 
 				elgg.action('editablecomments/edit', {
 					data: dataForm,
@@ -297,7 +297,7 @@ mrfb.history.init = function() {
 				}*/
 
 				mrfb.history.pushState({origin: url_origin, dataForm: dataForm}, null, url);
-				//mrfb.history.loadPage(url, data);
+				//mrfb.history.getPage(url, data);
 
 			}
 
@@ -306,19 +306,36 @@ mrfb.history.init = function() {
 
 	//}
 
-
-	$(window).bind('statechange', function() { //History.Adapter.bind(window, 'statechange', function(event) {
-		require(['history'], function() {
-			var State = History.getState();
-			if (State && !elgg.trigger_hook('mrfb_history', 'statechange')) {
-				mrfb.history.loadPage(State.url, State.data);
-			}
-		});
-	});
-
 };
 elgg.register_hook_handler('init', 'system', mrfb.history.init);
 
+
+
+/**
+* Helper to register some actions who perform event and stop click at history click hook.
+* @param  {string}      match       Check if url match this string.
+* @param  {function}    callback    Function to execute after elgg.action. Parameters for this function is (params, json).
+* @param  {integer}     priority    Priority of the hook handler.
+* @return {bool}                    Return false if action is executed or original value.
+*/
+mrfb.history.register_direct_action = function(match, callback, priority) {
+	var executeAction = function(name, type, params, value) {
+		if (params.url.match(match)) {
+			mrfb.history.progressBar('start');
+			elgg.action(params.url, {
+				success: function(json) {
+					mrfb.history.progressBar('stop');
+					callback(params, json);
+				}
+			});
+			return false;
+		} else {
+			return value;
+		}
+	};
+
+	elgg.register_hook_handler('mrfb_history', 'click', executeAction, priority);
+};
 
 
 /**
@@ -327,7 +344,7 @@ elgg.register_hook_handler('init', 'system', mrfb.history.init);
 * @param  {[type]} data
 * @return {[type]}
 */
-mrfb.history.loadPage = function(url, data) {
+mrfb.history.getPage = function(url, data) {
 	var data = data || false,
 		fragment = data.fragment || false,
 		urlActivity = elgg.get_site_url() +'activity(.*)',
@@ -345,7 +362,7 @@ mrfb.history.loadPage = function(url, data) {
 			}
 		};
 
-	// if user go back to the deck-river and river is stashed, we show it and skip elgg.post
+	// if user go back to the deck-river and river is stashed, we show it and skip elgg.get
 	if (activityTab && $('#stash_'+urlToStashID(activityTab)).length) {
 		var $stash = $('#stash_'+urlToStashID(activityTab));
 
@@ -358,12 +375,11 @@ mrfb.history.loadPage = function(url, data) {
 		return true;
 	}
 
-	$('body').addClass('ajaxLoading');
-
-	elgg.post(url, {
+	elgg.get(url, {
 		data: data.dataForm, // @todo Here it could be usefull to add some infos about browser type, screen size...
 		dataType: 'json',
 		complete: function() {
+			console.log('complete');
 			mrfb.history.progressBar('stop');
 		},
 		success: function(response, textStatus, xmlHttp) {
@@ -380,10 +396,9 @@ mrfb.history.loadPage = function(url, data) {
 				elgg.system_message(response.system_messages.success);
 
 				if (response.forward_url && !response.system_messages.error.length) {
-					/* This is an action !
-					 * If it's not an action, response doesn't got a forward_url
-					 * note: when server is down > Object { readyState=0, status=0, statusText="error"}
-					*/
+					// This is an action !
+					// If it's not an action, response doesn't got a forward_url
+					// note: when server is down > Object { readyState=0, status=0, statusText="error"}
 					forward_url = elgg.normalize_url(decodeURIComponent(response.forward_url));
 
 					if (urlPath.match('/action/groups/featured') || urlPath.match('/action/groups/leave')) {
@@ -456,7 +471,6 @@ mrfb.history.loadPage = function(url, data) {
 				if (fragment && $('#'+fragment).length) {
 					$(window).scrollTo($('#'+fragment), 'slow', {offset:-60});
 				}
-				$('body').removeClass('ajaxLoading');
 
 				if (data.callback) data.callback();
 
@@ -466,17 +480,31 @@ mrfb.history.loadPage = function(url, data) {
 		},
 		error: function(response) {
 			console.log(response, 'error');
-			$('body').removeClass('ajaxLoading');
 			mrfb.history.progressBar('stop');
+			if (response.status != 404) mrfb.history.changeUrl(data);
 		},
-		404: function() {
-			console.log('4Q4');
+		statusCode: {
+			404: function() {
+				console.log('4Q4');
+			},
+			500: function() {
+				console.log('500');
+			}
 		}
 		/*error: function(jqXHR, textStatus, errorThrown){
 			document.location.href = url;
 			return false;
 		}*/
 	});
+};
+
+
+
+/**
+ * Display page
+ */
+mrfb.history.displayPage = function(response) {
+
 };
 
 
@@ -491,11 +519,9 @@ mrfb.history.loadPage = function(url, data) {
 elgg.unregister_hook_handler = function(name, type, handler) {
 	var priorities =  elgg.config.hooks;
 
-	if (!(priorities[name][type] instanceof elgg.ElggPriorityList)) {
-		priorities[name][type] = new elgg.ElggPriorityList();
+	if (priorities[name][type] instanceof elgg.ElggPriorityList) {
+		priorities[name][type].remove(handler);
 	}
-
-	return priorities[name][type].remove(handler);
 };
 
 
@@ -537,7 +563,7 @@ mrfb.history.changeUrl = function(data, url) {
 // the hook that return false and remove himself
 mrfb.history.interceptHistory = function() {
 	elgg.unregister_hook_handler('mrfb_history', 'statechange', mrfb.history.interceptHistory);
-	return true;
+	return false;
 };
 
 
@@ -545,35 +571,30 @@ mrfb.history.interceptHistory = function() {
 /**
  * Progress bar
  */
+mrfb.history.progressBarInterval = null;
 mrfb.history.progressBar = function(action) {
-	var $p = $('#progress'),
-		progressTimeout;
-
-/*if (!NProgress.status) NProgress.set(0);
-
-var work = function() {
-setTimeout(function() {
-if (!NProgress.status) return;
-NProgress.trickle();
-work();
-}, Settings.trickleSpeed);
-};
-
-if (Settings.trickle) work();*/
-
+	var $b = $('body'),
+		$p = $('#progress'),
+		aL = 'ajaxLoading';
 
 	if (action == 'start') {
+		$b.addClass(aL);
 		$p.css({width: 0});
-		progressInterval = setInterval(function() {
-			var windowWidth = $(window).width(),
-				width = Math.min($p.width() + Math.floor(Math.random() * (windowWidth*0.2) + 50), windowWidth*0.9);
-			$p.animate({width: width}, 250);
-		}, 300);
+		if (!mrfb.history.progressBarInterval) {
+			mrfb.history.progressBarInterval = setInterval(function() {
+				var windowWidth = $(window).width(),
+					width = Math.min($p.width() + Math.floor(Math.random() * (windowWidth*0.2) + 50), windowWidth*0.9);
+				$p.animate({width: width}, 250);
+			}, 300);
+		}
 	} else if (action == 'stop') {
-		clearInterval(progressInterval);
+		clearInterval(mrfb.history.progressBarInterval);
+		mrfb.history.progressBarInterval = null;
 		$p.animate({width: '100%'}, 100);
+		$b.removeClass(aL);
 	}
-}
+};
+
 
 
 /**

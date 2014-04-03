@@ -148,7 +148,7 @@ function mrfb_page_setup() {
 		$text .=  '<span class="fi-mail"></span>';
 		elgg_register_menu_item('topbar', array(
 			'name' => 'messages',
-			'href' => 'messages/inbox/' . elgg_get_logged_in_user_entity()->username,
+			'href' => 'mesisages/inbox/' . elgg_get_logged_in_user_entity()->username,
 			'text' => $text,
 			'section' => 'alt',
 			'priority' => 99

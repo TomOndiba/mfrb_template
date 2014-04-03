@@ -15,16 +15,13 @@
 	font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
 	color: #FFF;
 	width: auto;
-	padding: 5px 12px;
+	padding: 6px 12px;
 	cursor: pointer;
 	background: #3498DB;
 	border: 1px solid #3873AB; /* Fallback */
 	border: 1px solid rgba(0, 0, 0, 0.2);
 
 	border-radius: 3px;
-}
-a.elgg-button {
-	padding: 6px 12px;
 }
 .elgg-button:hover,
 .elgg-button:focus {
