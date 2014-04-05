@@ -1,10 +1,10 @@
 <?php
 /**
- *	mrfb_template plugin
- *	@package mrfb_template
+ *	mfrb_template plugin
+ *	@package mfrb_template
  *	@author Emmanuel Salomon @ManUtopiK
  *	@license GNU Affero General Public License, version 3 or late
- *	@link https://github.com/revenudebase/mrfb_template
+ *	@link https://github.com/revenudebase/mfrb_template
  *
  * PHP functions library file
  *
@@ -16,9 +16,9 @@
  * Store some javascript code to be executed when page change in full ajax.
  * @param  Array/String      $code      Some javascript code to be executed
  * @param  Boolean           $count     If true, return number of items
- * @return Boolean/Array                Return true when code is stored / A call with no var (mrfb_execute_js()) return an array of stored items, and clear this array.
+ * @return Boolean/Array                Return true when code is stored / A call with no var (mfrb_execute_js()) return an array of stored items, and clear this array.
  */
-function mrfb_execute_js($code = null, $count = false) {
+function mfrb_execute_js($code = null, $count = false) {
 	if (!isset($_SESSION['js_code'])) {
 		$_SESSION['js_code'] = array();
 	}

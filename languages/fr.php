@@ -1,12 +1,12 @@
 <?php
 /**
- *	mrfb_template - for elgg 1.9+
- *	@package mrfb_template
+ *	mfrb_template - for elgg 1.9+
+ *	@package mfrb_template
  *	@author Emmanuel Salomon @ManUtopiK
  *	@license GNU Affero General Public License, version 3 or late
- *	@link https://github.com/revenudebase/mrfb_template
+ *	@link https://github.com/revenudebase/mfrb_template
  *
- *	mrfb_template fr.php
+ *	mfrb_template fr.php
  *
  *	Helper to include all fr languages files
  *
@@ -15,7 +15,7 @@
 // Declare files
 $files = array(
 	'elgg', // Elgg core language
-	'mrfb', // language for mrfb
+	'mfrb', // language for mfrb
 	'reportedcontent',
 	'groups',
 	'tagcloud',

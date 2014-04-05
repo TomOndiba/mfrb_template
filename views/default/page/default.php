@@ -18,7 +18,7 @@
  */
 $params['body'] = elgg_view('page/elements/body', $vars);
 if (!elgg_is_logged_in()) $params['body'] .= elgg_view('core/account/login_dropdown');
-$params['topbar'] = elgg_view('mrfb_template/page/topbar', $vars);
+$params['topbar'] = elgg_view('mfrb_template/page/topbar', $vars);
 
 
 /**
@@ -40,12 +40,12 @@ if (elgg_is_xhr()) {
 		);
 	}
 
-	mrfb_execute_js(elgg_view('mrfb_template/page/reinitialize_elgg'));
+	mfrb_execute_js(elgg_view('mfrb_template/page/reinitialize_elgg'));
 	$code = ''; // reset $code !
 
 	$params['js_code'] .= 'console.log("'. _elgg_services()->db->getQueryCount() .'", "queryCount");'; // uncomment to see number of SQL calls
 
-	foreach (mrfb_execute_js() as $code) {
+	foreach (mfrb_execute_js() as $code) {
 		$params['js_code'] .= $code;
 	}
 
@@ -67,7 +67,7 @@ $messages = elgg_view('page/elements/messages', array('object' => $vars['sysmess
 $logo = elgg_view('output/url', array(
 	'id' => 'logo',
 	'href' => 'activity',
-	'text' => '<img src="' . elgg_get_site_url() . 'mod/mrfb_template/graphics/Logo_mrfb.png" class="float t500">'
+	'text' => '<img src="' . elgg_get_site_url() . 'mod/mfrb_template/graphics/Logo_mfrb.png" class="float t500">'
 ));
 
 
@@ -96,7 +96,7 @@ $body = <<<__BODY
 	</div>
 </div>
 
-<div id="goTop" class="t250"><div class="mrfb-icon tooltip e" title="{$echo_btt}"></div></div>
+<div id="goTop" class="t250"><div class="mfrb-icon tooltip e" title="{$echo_btt}"></div></div>
 __BODY;
 
 $body .= elgg_view('page/elements/foot');

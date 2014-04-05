@@ -7,8 +7,6 @@
  * @uses $vars['sidebar_alt] HTML content for the alternate sidebar
  */
 
-elgg_push_context('owner_block');
-
 // groups and other users get owner block
 $user = elgg_get_logged_in_user_entity();
 
@@ -18,7 +16,7 @@ if ($user instanceof ElggGroup || $user instanceof ElggUser) {
 		'image' => elgg_view_entity_icon($user, 'normal'),
 		'class' => 'sidebar-avatar',
 		'body' => '<h3>' . elgg_view('output/url', array(
-			'text' => substr_replace($user->name, '<br>', strpos($user->name, " "), 1),
+			'text' => substr_replace($user->name, '<br>', strpos($user->name, " "), 0),
 			'href' => $user->getURL()
 		)) . '</h3>'
 	));
@@ -31,6 +29,10 @@ if ($user instanceof ElggGroup || $user instanceof ElggUser) {
 		'class' => 'elgg-owner-block',
 	));
 }
+
+elgg_push_context('owner_block');
+
+
 
 elgg_pop_context();
 

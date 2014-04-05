@@ -53,8 +53,8 @@ switch ($page_type) {
 
 $content .= elgg_view('core/river/filter', array('selector' => $selector));
 
-$sidebar = elgg_view('river/mrfb_sidebar');
-$sidebar_alt = elgg_view('river/mrfb_sidebar_alt');
+$sidebar = elgg_view('river/mfrb_sidebar');
+$sidebar_alt = elgg_view('river/mfrb_sidebar_alt');
 
 $activity = elgg_list_river($options);
 if (!$activity) {

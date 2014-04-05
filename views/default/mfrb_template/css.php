@@ -1,12 +1,12 @@
 <?php
 /**
- *	mrfb_template - for elgg 1.9+
- *	@package mrfb_template
+ *	mfrb_template - for elgg 1.9+
+ *	@package mfrb_template
  *	@author Emmanuel Salomon @ManUtopiK
  *	@license GNU Affero General Public License, version 3 or late
- *	@link https://github.com/revenudebase/mrfb_template
+ *	@link https://github.com/revenudebase/mfrb_template
  *
- *	mrfb_template css
+ *	mfrb_template css
  *
  *	Helper to include all css
  *
@@ -14,7 +14,7 @@
 
 
 readfile(__DIR__ . '/scss/foundation-icons.css');
-readfile(__DIR__ . '/scss/mrfb.css');
+readfile(__DIR__ . '/scss/mfrb.css');
 readfile(__DIR__ . '/scss/helpers.css');
 
 ob_start();
@@ -28,4 +28,4 @@ echo $scss->compile($files);
 
 ?>
 
-// End of all mrfb_template css files
+// End of all mfrb_template css files

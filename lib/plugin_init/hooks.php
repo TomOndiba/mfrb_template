@@ -14,7 +14,7 @@
 /**
  * Override page head to add metadatas
  */
-function mrfb_setup_head($hook, $type, $return, $params) {
+function mfrb_setup_head($hook, $type, $return, $params) {
 	// rewrite title
 	if (empty($params['title'])) {
 		$return['title'] = elgg_get_config('sitename');
@@ -38,7 +38,7 @@ function mrfb_setup_head($hook, $type, $return, $params) {
 		'rel' => 'icon',
 		'sizes' => '48x48',
 		'type' => 'image/png',
-		'href' => elgg_normalize_url('mod/mrfb/graphics/favicon/favicon.png'),
+		'href' => elgg_normalize_url('mod/mfrb/graphics/favicon/favicon.png'),
 	);
 	$return['links'][] = array(
 		'rel' => 'apple-touch-icon',
@@ -56,7 +56,7 @@ function mrfb_setup_head($hook, $type, $return, $params) {
 function mfrb_output_ajax_plugin_hook($hook, $type, $return, $params) {
 	// Add code to be executed as javascript
 	$code = '';
-	foreach (mrfb_execute_js() as $code) {
+	foreach (mfrb_execute_js() as $code) {
 		$return['js_code'] .= $code;
 	}
 

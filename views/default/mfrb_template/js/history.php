@@ -1,6 +1,6 @@
 // start of history lib
 
-elgg.provide('mrfb.history');
+elgg.provide('mfrb.history');
 
 /*
  * Sample to understand how js is loaded.
@@ -10,41 +10,41 @@ elgg.provide('mrfb.history');
 
 benchmarkTimeInit = new Date().getTime();
 benchmarkTimeHistory = 0;
-console.log(benchmarkTimeInit, 'init'); // Executed when the js loads and the user arrives for the first time on mrfb. elgg core could be not loaded.
+console.log(benchmarkTimeInit, 'init'); // Executed when the js loads and the user arrives for the first time on mfrb. elgg core could be not loaded.
 
-elgg.provide('mrfb.benchmark');
-mrfb.benchmark.init = function() {
-	console.log(new Date().getTime()-benchmarkTimeInit, 'provide'); // Executed after elgg core js is loaded, only on the first time on mrfb
+elgg.provide('mfrb.benchmark');
+mfrb.benchmark.init = function() {
+	console.log(new Date().getTime()-benchmarkTimeInit, 'provide'); // Executed after elgg core js is loaded, only on the first time on mfrb
 	$(document).ready(function() {
-		console.log(new Date().getTime()-benchmarkTimeInit, 'ready'); // Executed when DOM is ready, only on the first time on mrfb
+		console.log(new Date().getTime()-benchmarkTimeInit, 'ready'); // Executed when DOM is ready, only on the first time on mfrb
 	});
-	$(window).load(function(){ //Executed after everythings (css,js,images) are loaded, only on the first time on mrfb
+	$(window).load(function(){ //Executed after everythings (css,js,images) are loaded, only on the first time on mfrb
 		console.log(new Date().getTime()-benchmarkTimeInit, 'load');
 	});
 
 };
-elgg.register_hook_handler('init', 'system', mrfb.benchmark.init);
+elgg.register_hook_handler('init', 'system', mfrb.benchmark.init);
 
-mrfb.benchmark.click = function() { // Executed when user click on a link
+mfrb.benchmark.click = function() { // Executed when user click on a link
 	benchmarkTimeHistory = new Date().getTime();
 	console.log(benchmarkTimeHistory, 'click');
 };
-elgg.register_hook_handler('mrfb_history', 'click', mrfb.benchmark.click);
+elgg.register_hook_handler('mfrb_history', 'click', mfrb.benchmark.click);
 
-mrfb.benchmark.statechange = function() { // Executed when url change
+mfrb.benchmark.statechange = function() { // Executed when url change
 	console.log(new Date().getTime()-benchmarkTimeHistory, 'statechange');
 };
-elgg.register_hook_handler('mrfb_history', 'statechange', mrfb.benchmark.statechange);
+elgg.register_hook_handler('mfrb_history', 'statechange', mfrb.benchmark.statechange);
 
-mrfb.benchmark.success = function() { // Executed when page are loaded after a click or url change
+mfrb.benchmark.success = function() { // Executed when page are loaded after a click or url change
 	console.log(new Date().getTime()-benchmarkTimeHistory, 'success');
 };
-elgg.register_hook_handler('mrfb_history', 'success', mrfb.benchmark.success);
+elgg.register_hook_handler('mfrb_history', 'success', mfrb.benchmark.success);
 
-mrfb.benchmark.done = function() { // Executed when page are loaded and all stuff are done (reload template and js...)
+mfrb.benchmark.done = function() { // Executed when page are loaded and all stuff are done (reload template and js...)
 	console.log(new Date().getTime()-benchmarkTimeHistory, 'done');
 };
-elgg.register_hook_handler('mrfb_history', 'done', mrfb.benchmark.done);
+elgg.register_hook_handler('mfrb_history', 'done', mfrb.benchmark.done);
 
 
 
@@ -52,15 +52,15 @@ elgg.register_hook_handler('mrfb_history', 'done', mrfb.benchmark.done);
 /**
  * Function to initiate full ajax.
  */
-mrfb.history.init = function() {
+mfrb.history.init = function() {
 	//var History = window.History;
 
 	$(window).bind('statechange', function() { //History.Adapter.bind(window, 'statechange', function(event) {
 		require(['history'], function() {
 			var state = History.getState();
-			if (state && elgg.trigger_hook('mrfb_history', 'statechange', state, true)) {
+			if (state && elgg.trigger_hook('mfrb_history', 'statechange', state, true)) {
 				console.log('state', state);
-				mrfb.history.getPage(state.url, state.data);
+				mfrb.history.getPage(state.url, state.data);
 			}
 		});
 	});
@@ -86,7 +86,6 @@ mrfb.history.init = function() {
 				"[href$='#'],"+
 				"[rel=toggle],"+
 				"[rel=popup],"+
-				"[href*='/admin/'],"+
 				"[href*='/ajax/'],"+
 				"[href*='/logout'],"+
 				"[href*='view=rss'],"+
@@ -115,7 +114,7 @@ mrfb.history.init = function() {
 			$.extend(params, elgg.parse_url(params.url));
 
 			// Plugin can hook at this point to stop click event by returning false
-			if (!elgg.trigger_hook('mrfb_history', 'click', params, true)) return false;
+			if (!elgg.trigger_hook('mfrb_history', 'click', params, true)) return false;
 
 			// Continue as normal (open link in new tab) for cmd/ctrl+click
 			if (evt.which == 2 || evt.metaKey) return true;
@@ -178,8 +177,8 @@ mrfb.history.init = function() {
 				if (fragment && path_origin == path_url) { //same page, go to #hash
 					if ($('#'+fragment).length) $(window).scrollTo($('#'+fragment), 'slow', {offset:-60});
 				} else {
-					mrfb.history.progressBar('start');
-					mrfb.history.pushState({originUrl: originUrl, fragment: fragment}, null, url.split("#")[0]);
+					mfrb.history.progressBar('start');
+					mfrb.history.pushState({originUrl: originUrl, fragment: fragment}, null, url.split("#")[0]);
 				}
 			}
 
@@ -187,10 +186,10 @@ mrfb.history.init = function() {
 		});
 
 		// Register hook handler for some actions.
-		mrfb.history.register_direct_action('/action/river/delete', function(params) {
+		mfrb.history.register_direct_action('/action/river/delete', function(params) {
 			params.$this.closest('.elgg-item').css('background-color', '#FF7777').fadeOut();
 		});
-		mrfb.history.register_direct_action('/action/comments/delete', function(params) {
+		mfrb.history.register_direct_action('/action/comments/delete', function(params) {
 			$('#item-annotation-'+elgg.parse_str(params.query).annotation_id).css('background-color', '#FF7777').fadeOut();
 		});
 
@@ -202,8 +201,8 @@ mrfb.history.init = function() {
 							"[class*='noajax'])"
 		, function(evt) {
 
-			elgg.trigger_hook('mrfb_history', 'submit');
-			mrfb.history.progressBar('start');
+			elgg.trigger_hook('mfrb_history', 'submit');
+			mfrb.history.progressBar('start');
 
 			var form = $(this).closest('form'),
 				dataForm = form.serialize(),
@@ -296,8 +295,8 @@ mrfb.history.init = function() {
 					data.dataForm = elgg.security.addToken(data.dataForm);
 				}*/
 
-				mrfb.history.pushState({origin: url_origin, dataForm: dataForm}, null, url);
-				//mrfb.history.getPage(url, data);
+				mfrb.history.pushState({origin: url_origin, dataForm: dataForm}, null, url);
+				//mfrb.history.getPage(url, data);
 
 			}
 
@@ -307,7 +306,7 @@ mrfb.history.init = function() {
 	//}
 
 };
-elgg.register_hook_handler('init', 'system', mrfb.history.init);
+elgg.register_hook_handler('init', 'system', mfrb.history.init);
 
 
 
@@ -318,13 +317,13 @@ elgg.register_hook_handler('init', 'system', mrfb.history.init);
 * @param  {integer}     priority    Priority of the hook handler.
 * @return {bool}                    Return false if action is executed or original value.
 */
-mrfb.history.register_direct_action = function(match, callback, priority) {
+mfrb.history.register_direct_action = function(match, callback, priority) {
 	var executeAction = function(name, type, params, value) {
 		if (params.url.match(match)) {
-			mrfb.history.progressBar('start');
+			mfrb.history.progressBar('start');
 			elgg.action(params.url, {
 				success: function(json) {
-					mrfb.history.progressBar('stop');
+					mfrb.history.progressBar('stop');
 					callback(params, json);
 				}
 			});
@@ -334,7 +333,7 @@ mrfb.history.register_direct_action = function(match, callback, priority) {
 		}
 	};
 
-	elgg.register_hook_handler('mrfb_history', 'click', executeAction, priority);
+	elgg.register_hook_handler('mfrb_history', 'click', executeAction, priority);
 };
 
 
@@ -344,7 +343,7 @@ mrfb.history.register_direct_action = function(match, callback, priority) {
 * @param  {[type]} data
 * @return {[type]}
 */
-mrfb.history.getPage = function(url, data) {
+mfrb.history.getPage = function(url, data) {
 	var data = data || false,
 		fragment = data.fragment || false,
 		urlActivity = elgg.get_site_url() +'activity(.*)',
@@ -380,18 +379,18 @@ mrfb.history.getPage = function(url, data) {
 		dataType: 'json',
 		complete: function() {
 			console.log('complete');
-			mrfb.history.progressBar('stop');
+			mfrb.history.progressBar('stop');
 		},
 		success: function(response, textStatus, xmlHttp) {
 
-			elgg.trigger_hook('mrfb_history', 'success');
+			elgg.trigger_hook('mfrb_history', 'success');
 
 			var urlParsed = elgg.parse_url(url),
 				urlPath = urlParsed.path;
 
 			//try {
 
-				eval(response.js_code); // execute javascript from mrfb_execute_js. It's include hack to reload js/initialize_elgg forked from mrfb_template/page/reinitialize_elgg
+				eval(response.js_code); // execute javascript from mfrb_execute_js. It's include hack to reload js/initialize_elgg forked from mfrb_template/page/reinitialize_elgg
 				elgg.register_error(response.system_messages.error);
 				elgg.system_message(response.system_messages.success);
 
@@ -402,13 +401,13 @@ mrfb.history.getPage = function(url, data) {
 					forward_url = elgg.normalize_url(decodeURIComponent(response.forward_url));
 
 					if (urlPath.match('/action/groups/featured') || urlPath.match('/action/groups/leave')) {
-						mrfb.history.replaceState(data, null, data.origin);
+						mfrb.history.replaceState(data, null, data.origin);
 					} else if (forward_url != null) {
 						if (urlPath.match('/action/brainstorm/delete')) {
 							var brainstorm_guid = elgg.parse_str(urlParsed.query).guid;
 							$('.elgg-body #elgg-object-'+brainstorm_guid).css('background-color', '#FF7777').fadeOut();
 						}
-						mrfb.history.replaceState(data, null, forward_url); // catch forward(). See mrfb_ajax_forward_hook
+						mfrb.history.replaceState(data, null, forward_url); // catch forward(). See mfrb_ajax_forward_hook
 					} else if (xmlHttp.status = 200) {
 						window.location.replace(url); // in case of...
 					}
@@ -465,7 +464,7 @@ mrfb.history.getPage = function(url, data) {
 
 					if (!data.noscroll) $(window).scrollTop(0);
 
-					mrfb.history.reloadJsFunctions();
+					mfrb.history.reloadJsFunctions();
 				}
 
 				if (fragment && $('#'+fragment).length) {
@@ -480,8 +479,8 @@ mrfb.history.getPage = function(url, data) {
 		},
 		error: function(response) {
 			console.log(response, 'error');
-			mrfb.history.progressBar('stop');
-			if (response.status != 404) mrfb.history.changeUrl(data);
+			mfrb.history.progressBar('stop');
+			if (response.status != 404) mfrb.history.changeUrl(data);
 		},
 		statusCode: {
 			404: function() {
@@ -503,7 +502,7 @@ mrfb.history.getPage = function(url, data) {
 /**
  * Display page
  */
-mrfb.history.displayPage = function(response) {
+mfrb.history.displayPage = function(response) {
 
 };
 
@@ -529,7 +528,7 @@ elgg.unregister_hook_handler = function(name, type, handler) {
 /**
  * Wrapper for History.replaceState
  */
-mrfb.history.replaceState = function(data, title, url) {
+mfrb.history.replaceState = function(data, title, url) {
 	require(['history'], function() {
 		History.replaceState(data, title, url);
 	});
@@ -540,7 +539,7 @@ mrfb.history.replaceState = function(data, title, url) {
 /**
  * Wrapper for History.pushState
  */
-mrfb.history.pushState = function(data, title, url) {
+mfrb.history.pushState = function(data, title, url) {
 	require(['history'], function() {
 		History.pushState(data, title, url);
 	});
@@ -550,19 +549,19 @@ mrfb.history.pushState = function(data, title, url) {
 
 /**
  * Change url in browser without load the page. Only url is changed.
- * To do that, we need to register a hook on mrfb_history statechane to return true, and remove it just after.
+ * To do that, we need to register a hook on mfrb_history statechane to return true, and remove it just after.
  *
  * @param {Obj}      data     data of History State
  * @param {String}   url      Url to put in browser url (optional). If no url is provided, data.origin is the url.
  */
-mrfb.history.changeUrl = function(data, url) {
+mfrb.history.changeUrl = function(data, url) {
 	var url = url || data.origin;
-	elgg.register_hook_handler('mrfb_history', 'statechange', mrfb.history.interceptHistory);
-	mrfb.history.replaceState(data, null, url);
+	elgg.register_hook_handler('mfrb_history', 'statechange', mfrb.history.interceptHistory);
+	mfrb.history.replaceState(data, null, url);
 };
 // the hook that return false and remove himself
-mrfb.history.interceptHistory = function() {
-	elgg.unregister_hook_handler('mrfb_history', 'statechange', mrfb.history.interceptHistory);
+mfrb.history.interceptHistory = function() {
+	elgg.unregister_hook_handler('mfrb_history', 'statechange', mfrb.history.interceptHistory);
 	return false;
 };
 
@@ -571,8 +570,8 @@ mrfb.history.interceptHistory = function() {
 /**
  * Progress bar
  */
-mrfb.history.progressBarInterval = null;
-mrfb.history.progressBar = function(action) {
+mfrb.history.progressBarInterval = null;
+mfrb.history.progressBar = function(action) {
 	var $b = $('body'),
 		$p = $('#progress'),
 		aL = 'ajaxLoading';
@@ -580,16 +579,16 @@ mrfb.history.progressBar = function(action) {
 	if (action == 'start') {
 		$b.addClass(aL);
 		$p.css({width: 0});
-		if (!mrfb.history.progressBarInterval) {
-			mrfb.history.progressBarInterval = setInterval(function() {
+		if (!mfrb.history.progressBarInterval) {
+			mfrb.history.progressBarInterval = setInterval(function() {
 				var windowWidth = $(window).width(),
 					width = Math.min($p.width() + Math.floor(Math.random() * (windowWidth*0.2) + 50), windowWidth*0.9);
 				$p.animate({width: width}, 250);
 			}, 300);
 		}
 	} else if (action == 'stop') {
-		clearInterval(mrfb.history.progressBarInterval);
-		mrfb.history.progressBarInterval = null;
+		clearInterval(mfrb.history.progressBarInterval);
+		mfrb.history.progressBarInterval = null;
 		$p.animate({width: '100%'}, 100);
 		$b.removeClass(aL);
 	}
@@ -601,7 +600,7 @@ mrfb.history.progressBar = function(action) {
  * Reload js of plugins
  * @return {[type]} [description]
  */
-mrfb.history.reloadJsFunctions = function() {
+mfrb.history.reloadJsFunctions = function() {
 	$('.tipsy').remove(); // in case of because sometimes tooltip stick
 
 	// Send to Piwik tracker
@@ -634,7 +633,7 @@ mrfb.history.reloadJsFunctions = function() {
 		$(elgg.userpicker.userList).prop($(elem).val(), true);
 	});
 */
-	elgg.trigger_hook('mrfb_history', 'done');
+	elgg.trigger_hook('mfrb_history', 'done');
 }
 
 // end of history lib

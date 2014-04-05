@@ -1,18 +1,18 @@
-// js for mrfb_template
+// js for mfrb_template
 
 
 /*
- * mrfb_template initialisation
+ * mfrb_template initialisation
  */
-elgg.provide('elgg.mrfb_template');
-elgg.provide('mrfb');
+elgg.provide('elgg.mfrb_template');
+elgg.provide('mfrb');
 
 
 
 /*
  * Init. Loaded for the first time only
  */
-elgg.mrfb_template.init = function() {
+elgg.mfrb_template.init = function() {
 
 	$('#toggle-sidebar').click(function() {
 		if ($(this).hasClass('fi-arrow-right')) {
@@ -34,10 +34,10 @@ elgg.mrfb_template.init = function() {
 	});
 
 	// bind resize window
-	$(window).bind('resize.mrfb_template', function() {
-		if (!$('.elgg-page-admin').length) elgg.mrfb_template.resize();
+	$(window).bind('resize.mfrb_template', function() {
+		if (!$('.elgg-page-admin').length) elgg.mfrb_template.resize();
 	});
-	if (!$('.elgg-page-admin').length) elgg.mrfb_template.resize();
+	if (!$('.elgg-page-admin').length) elgg.mfrb_template.resize();
 
 	// goTop button
 	var gT = $('#goTop');
@@ -82,13 +82,13 @@ elgg.mrfb_template.init = function() {
 	};
 	$.datepicker.setDefaults($.datepicker.regional['fr']);
 };
-elgg.register_hook_handler('init', 'system', elgg.mrfb_template.init);
+elgg.register_hook_handler('init', 'system', elgg.mfrb_template.init);
 
 
 /*
  * Resize, scroll and fix sidebar
  */
-elgg.mrfb_template.resize = function() {
+elgg.mfrb_template.resize = function() {
 	var windowWidth = $(window).width(),
 		$es = $('.elgg-sidebar'),
 		$esa = $('.elgg-sidebar-alt'),
