@@ -43,7 +43,7 @@ if (elgg_is_xhr()) {
 	mfrb_execute_js(elgg_view('mfrb_template/page/reinitialize_elgg'));
 	$code = ''; // reset $code !
 
-	$params['js_code'] .= 'console.log("'. _elgg_services()->db->getQueryCount() .'", "queryCount");'; // uncomment to see number of SQL calls
+	$params['js_code'] = 'console.log("'. _elgg_services()->db->getQueryCount() .'", "queryCount");'; // uncomment to see number of SQL calls
 
 	foreach (mfrb_execute_js() as $code) {
 		$params['js_code'] .= $code;
