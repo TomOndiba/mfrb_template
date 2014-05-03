@@ -85,6 +85,7 @@ elgg.mfrb_template.init = function() {
 elgg.register_hook_handler('init', 'system', elgg.mfrb_template.init);
 
 
+
 /*
  * Resize, scroll and fix sidebar
  */
@@ -108,6 +109,16 @@ elgg.mfrb_template.resize = function() {
 	$body.css('margin-right', 0);
 	$('#toggle-sidebar').removeClass('fi-arrow-left').addClass('fi-arrow-right');
 };
+
+elgg.mfrb_template.reload_js = function() {
+	// Send to Piwik tracker
+	if (typeof piwikTracker != 'undefined' && typeof piwikTracker.trackPageView == 'function') {
+		piwikTracker.setDocumentTitle(document.title);
+		piwikTracker.setCustomUrl(window.location.href);
+		piwikTracker.trackPageView();
+	}
+};
+elgg.register_hook_handler('history', 'reload_js', elgg.mfrb_template.reload_js);
 
 
 

@@ -16,7 +16,7 @@
 /**
  * We load body only. It's used for standard call or ajax call.
  */
-$params['body'] = elgg_view('page/elements/body', $vars);
+$params['body'] = trim(elgg_view('page/elements/body', $vars)); // trim because JQMIGRATE: $(html) HTML strings must start with '<' character 
 if (!elgg_is_logged_in()) $params['body'] .= elgg_view('core/account/login_dropdown');
 $params['topbar'] = elgg_view('mfrb_template/page/topbar', $vars);
 

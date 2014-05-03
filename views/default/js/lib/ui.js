@@ -22,7 +22,7 @@ elgg.ui.init = function () {
 
 	$('.elgg-menu-page .elgg-menu-parent').live('click', elgg.ui.toggleMenu);
 
-	//$('.elgg-requires-confirmation').live('click', elgg.ui.requiresConfirmation); // don't need it because full ajax. See in ggouv_template main js
+	//$('.elgg-requires-confirmation').live('click', elgg.ui.requiresConfirmation); // don't need it because full ajax. See in history js
 
 	$('.elgg-autofocus').focus();
 	if ($('.elgg-autofocus').length > 0) {
@@ -45,14 +45,9 @@ elgg.ui.toggles = function(event) {
 	event.preventDefault();
 
 	// @todo might want to switch this to elgg.getSelectorFromUrlFragment().
-	var target = $(this).toggleClass('elgg-state-active').attr('href'),
-		texta = $(target).find('.input-markdown');
+	var target = $(this).toggleClass('elgg-state-active').attr('href');
 
 	$(target).slideToggle('medium');
-	if (texta) {
-		$(target).find('.toggle-preview').click();
-		texta.keyup();
-	}
 };
 
 /**
@@ -92,7 +87,7 @@ elgg.ui.popupOpen = function(event) {
 		at: 'center bottom',
 		of: $(this),
 		collision: 'fit fit'
-	}
+	};
 
 	options = elgg.trigger_hook('getOptions', 'ui.popup', params, options);
 
@@ -221,7 +216,7 @@ elgg.ui.initHoverMenu = function(parent) {
 
 	// hide avatar menu when user clicks elsewhere
 	$(document).click(function(event) {
-		if ($(event.target).parents(".elgg-avatar").length == 0) {
+		if ($(event.target).parents(".elgg-avatar").length === 0) {
 			$(".elgg-menu-hover").fadeOut();
 		}
 	});
@@ -276,7 +271,7 @@ elgg.ui.initDatePicker = function() {
 	var loadDatePicker = function() {
 		$('.elgg-input-date').datepicker({
 			// ISO-8601
-			//dateFormat: 'yy-mm-dd',
+			dateFormat: 'yy-mm-dd',
 			onSelect: function(dateText) {
 				if ($(this).is('.elgg-input-timestamp')) {
 					// convert to unix timestamp
@@ -291,18 +286,16 @@ elgg.ui.initDatePicker = function() {
 		});
 	};
 
-	if ($('.elgg-input-date').length) {
-		if (elgg.isUndefined($.datepicker.regional[elgg.get_language()])) {
-			elgg.get({
-				url: elgg.config.wwwroot + 'vendors/jquery/i18n/jquery.ui.datepicker-'+ elgg.get_language() +'.js',
-				dataType: "script",
-				cache: true,
-				success: loadDatePicker,
-				error: loadDatePicker // english language is already loaded.
-			});
-		} else {
-			loadDatePicker();
-		}
+	if ($('.elgg-input-date').length && elgg.get_language() == 'en') {
+		loadDatePicker();
+	} else if ($('.elgg-input-date').length) {
+		elgg.get({
+			url: elgg.config.wwwroot + 'vendors/jquery/i18n/jquery.ui.datepicker-'+ elgg.get_language() +'.js',
+			dataType: "script",
+			cache: true,
+			success: loadDatePicker,
+			error: loadDatePicker // english language is already loaded.
+		});
 	}
 };
 
@@ -383,7 +376,7 @@ elgg.ui.initAccessInputs = function () {
 	$('.elgg-input-access').each(function () {
 		function updateMembersonlyNote() {
 			var val = $select.val();
-			if (val != acl && val != 0) {
+			if (val != acl && val !== 0) {
 				// .show() failed in Chrome. Maybe a float/jQuery bug
 				$note.css('visibility', 'visible');
 			} else {
