@@ -15,10 +15,12 @@
 
 readfile(__DIR__ . '/scss/foundation-icons.css');
 readfile(__DIR__ . '/scss/mfrb.css');
-readfile(__DIR__ . '/scss/helpers.css');
+readfile(__DIR__ . '/scss/mfrb_activity.css');
+//readfile(__DIR__ . '/scss/helpers.css');
 
 ob_start();
 include_once('scss/vars.php');
+include_once('scss/helpers.php');
 $ob = ob_get_clean();
 
 $files = $ob . file_get_contents(__DIR__ . '/scss/test.scss');

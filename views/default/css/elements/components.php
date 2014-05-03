@@ -247,6 +247,9 @@
 	margin-top: 25px;
 }
 .elgg-comments > form {
+	margin-top: 0;
+}
+.elgg-comments > ul + form {
 	margin-top: 15px;
 }
 

@@ -57,17 +57,17 @@
 .elgg-icon-cursor-drag-arrow {
 	background-position: 0 -198px;
 }
+.elgg-icon-delete:before {
+	content: "\f217";
+}
+.elgg-icon-delete:hover:before {
+	color: red;
+}
 .elgg-icon-delete-alt:before {
 	content: "\f217";
 }
 .elgg-icon-delete-alt:hover:before {
 	color: red;
-}
-.elgg-icon-delete:hover {
-	background-position: 0 -252px;
-}
-.elgg-icon-delete {
-	background-position: 0 -270px;
 }
 .elgg-icon-download:hover {
 	background-position: 0 -288px;
@@ -260,8 +260,8 @@
 .elgg-icon-thumbs-down-alt {
 	background-position: 0 -1296px;
 }
-.elgg-icon-thumbs-down {
-	background-position: 0 -1314px;
+.elgg-icon-thumbs-down:before {
+	content: "\f140";
 }
 .elgg-icon-thumbs-up-alt:hover {
 	background-position: 0 -1332px;
@@ -270,8 +270,8 @@
 .elgg-icon-thumbs-up-alt {
 	background-position: 0 -1350px;
 }
-.elgg-icon-thumbs-up {
-	background-position: 0 -1368px;
+.elgg-icon-thumbs-up:before {
+	content: "\f164";
 }
 .elgg-icon-trash {
 	background-position: 0 -1386px;

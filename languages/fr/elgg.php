@@ -904,7 +904,7 @@ $french = array(
 	'description' => "Description",
 	'tags' => "Mots-clés",
 	'spotlight' => "Projecteur sur",
-	'all' => "Tous",
+	'all' => "Tout",
 	'mine' => "Moi",
 
 	'by' => "par",

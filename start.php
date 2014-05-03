@@ -38,6 +38,9 @@ function mfrb_template_init() {
 	// actions
 	$action_path = "$root/actions/mfrb_template";
 
+	elgg_register_action('thewire/add', "$root/actions/thewire/add.php");
+	elgg_register_action('thewire/delete', "$root/actions/thewire/delete.php");
+
 	elgg_extend_view('css/elgg', 'mfrb_template/css');
 	elgg_extend_view('js/elgg', 'mfrb_template/js');
 
@@ -53,7 +56,14 @@ function mfrb_template_init() {
 		'deps' => array('jquery')
 	));
 
-	// register page handlers
+	/*
+	 * Register librairies
+	 */
+	elgg_register_library('thewire', $root . '/lib/thewire.php');
+
+	/*
+	 * Register page handlers
+	 */
 	elgg_register_page_handler('activity', 'activity_page_handler');
 
 
@@ -69,6 +79,10 @@ function mfrb_template_init() {
 
 	// hook to modify menus
 	elgg_register_event_handler('pagesetup', 'system', 'mfrb_page_setup');
+
+	// Hook for thewire river menu
+	elgg_unregister_plugin_hook_handler('register', 'menu:river', 'likes_river_menu_setup');
+	elgg_register_plugin_hook_handler('register', 'menu:river', 'mfrb_likes_river_menu_setup', 400);
 
 	// non-members do not get visible links to RSS feeds
 	if (!elgg_is_logged_in()) {

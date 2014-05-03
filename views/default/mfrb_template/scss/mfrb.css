@@ -505,8 +505,78 @@ html {
 
 
 
+/*
+ * LINKBOX
+ */
 
-
+#linkbox {
+	margin: 0;
+}
+#linkbox .elgg-menu {
+	margin-right: -5px;
+}
+#linkbox .image-wrapper {
+	height: 80px;
+	line-height: 80px;
+	overflow: hidden;
+	width: 80px;
+	background: #DEDEDE;
+	float: left;
+	margin: 8px;
+	position: relative;
+}
+#linkbox .elgg-image {
+	margin: 0 0px 0 -8px;
+	background: white;
+	position: absolute;
+	max-height: 460px;
+	overflow: auto;
+	max-width: 576px;
+}
+#linkbox .elgg-image:hover {
+	z-index: 7004;
+	box-shadow: 0 0 4px #CCC;
+	cursor: pointer;
+}
+#linkbox .elgg-image + .elgg-body {
+	margin-left: 90px;
+	min-height: 87px;
+}
+#linkbox li.image-wrapper {
+	display: none;
+}
+#linkbox div.image-wrapper:before {
+	content: "\2715";
+	position: absolute;
+	color: transparent;
+	z-index: 10000;
+	font-size: 6em;
+	width: 80px;
+	background: transparent;
+	left: 0;
+}
+#linkbox div.image-wrapper:active:before {
+	font-size: 7em;
+}
+#linkbox div.image-wrapper:hover:before, #linkbox div.image-wrapper.noimg:before {
+	color: red;
+	background: rgba(0, 0, 0, 0.3);
+}
+#linkbox li.image-wrapper:hover {
+	-webkit-box-shadow: 0 0 3px 3px #F1C40F;
+	box-shadow: 0 0 3px 3px #F1C40F;
+}
+#linkbox .elgg-image:hover li {
+	display: block;
+}
+#linkbox .link_name[contenteditable]:hover, #linkbox .link_description[contenteditable]:hover, #linkbox .link_name[contenteditable]:focus, #linkbox .link_description[contenteditable]:focus {
+	background: rgba(241, 196, 15, 0.5);
+}
+#linkbox .link_description {
+	min-height: 18px;
+	font-size: .9em;
+	margin-top: 6px;
+}
 
 
 

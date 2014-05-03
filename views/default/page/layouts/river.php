@@ -64,8 +64,6 @@ if (!isset($vars['filter']) && elgg_is_logged_in() && $context) {
 $filter = elgg_view('page/layouts/elements/filter', $vars);
 $vars['content'] = $filter . $vars['content'];
 
-
-
 $class = 'elgg-layout elgg-layout-two-sidebar clearfix';
 if (isset($vars['class'])) {
 	$class = "$class {$vars['class']}";

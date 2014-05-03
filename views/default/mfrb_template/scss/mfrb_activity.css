@@ -1,0 +1,44 @@
+/* sidebar alt */
+.sidebar_alt_list > li {
+	border: none;
+	padding: 4px;
+}
+.sidebar_alt_list > li a {
+	color: #666;
+	font-weight: normal;
+}
+
+/* elgg-body */
+
+.elgg-river-layout .elgg-main > .elgg-head {
+	padding-bottom: 20px;
+	margin-bottom: 20px;
+}
+#thewire-textarea {
+	resize: none;
+}
+
+
+.elgg-river-layout .elgg-list-river {
+	margin-top: 10px;
+	border: none;
+}
+.elgg-river-item .elgg-river-timestamp {
+	display: block;
+}
+.elgg-river-item .elgg-menu-river {
+	float: none;
+	margin: 10px 0;
+}
+.elgg-river-item .elgg-river-message {
+	white-space: pre-line;
+}
+.elgg-river-comments {
+	border-top: 1px solid #DCDCDC;
+}
+.elgg-river-comments li {
+	background: none;
+}
+.elgg-river-comments li.elgg-item-object-comment {
+	border-bottom: 1px solid #DCDCDC;
+}

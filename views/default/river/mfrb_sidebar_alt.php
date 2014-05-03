@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Elgg secondary sidebar contents
  *
@@ -10,7 +10,9 @@
 // groups and other users get owner block
 $user = elgg_get_logged_in_user_entity();
 
-if ($user instanceof ElggGroup || $user instanceof ElggUser) {
+elgg_push_context('owner_block');
+
+if ($user instanceof ElggUser) {
 
 	$header = elgg_view('page/components/image_block', array(
 		'image' => elgg_view_entity_icon($user, 'normal'),
@@ -28,9 +30,27 @@ if ($user instanceof ElggGroup || $user instanceof ElggUser) {
 		'body' => $body,
 		'class' => 'elgg-owner-block',
 	));
-}
 
-elgg_push_context('owner_block');
+
+	// groups
+	$dbprefix = elgg_get_config('dbprefix');
+
+	$body = elgg_list_entities_from_relationship(array(
+		'type' => 'group',
+		'relationship' => 'member',
+		'relationship_guid' => $user->getGUID(),
+		'inverse_relationship' => false,
+		'full_view' => 'small_list',
+		'joins' => array("JOIN {$dbprefix}groups_entity ge ON e.guid = ge.guid"),
+		'order_by' => 'ge.name ASC',
+		'no_results' => elgg_echo('groups:add'),
+		'list_class' => 'sidebar_alt_list',
+		'pagination' => false
+	));
+
+	echo elgg_view_module('aside', elgg_echo('groups:yours'), $body);
+
+}
 
 
 
