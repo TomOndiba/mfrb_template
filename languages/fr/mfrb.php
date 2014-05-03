@@ -12,7 +12,7 @@
 
 
 $french = array(
-
+	'mfrb:settings:non_logged_in_home_text' => "Texte de la page d'accueil en mode non connecté :",
 
 );
 
