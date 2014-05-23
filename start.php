@@ -52,7 +52,11 @@ function mfrb_template_init() {
 
 	// js files only loaded by require.js
 	elgg_register_js('history', array( // history.js for full ajax and play with HTML5 pushState
-		'src' => "$http_base/vendors/jquery.history.js",
+		'src' => "$http_base/vendors/jquery.history",
+		'deps' => array('jquery')
+	));
+	elgg_register_js('scrollTo', array(
+		'src' => "$http_base/vendors/jquery.scrollTo/jquery.scrollTo.min",
 		'deps' => array('jquery')
 	));
 

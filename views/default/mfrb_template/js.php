@@ -17,6 +17,8 @@ include_once('js/history.php');
 include_once('js/thewire.php');
 include_once('js/inline_vendors.php');
 
+//readfile(dirname(dirname(dirname(__DIR__))) . '/vendors/jquery.scrollTo/jquery.scrollTo.min.js');
+
 ?>
 
 // End of all mfrb_template javascript files
