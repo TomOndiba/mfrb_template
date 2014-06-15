@@ -19,11 +19,14 @@ define('MFRB_TEMPLATE', true); // usefull to say others plugins mfrb_template is
 /**
  * Load required files
  */
+require_once(dirname(__FILE__) . "/lib/plugin_init/handlers.php");
 require_once(dirname(__FILE__) . "/lib/plugin_init/functions.php");
 require_once(dirname(__FILE__) . "/lib/plugin_init/hooks.php");
 require_once(dirname(__FILE__) . "/vendors/scss.inc.php");
 
 
+// unregister group discussion
+elgg_unregister_event_handler('init', 'system', 'discussion_init');
 
 /**
  * mfrb_template init
@@ -36,13 +39,19 @@ function mfrb_template_init() {
 	$http_base = '/mod/mfrb_template';
 
 	// actions
-	$action_path = "$root/actions/mfrb_template";
+	$action_path = "$root/actions";
 
-	elgg_register_action('thewire/add', "$root/actions/thewire/add.php");
-	elgg_register_action('thewire/delete', "$root/actions/thewire/delete.php");
+	elgg_register_action('comment/save', "$action_path/comment/save.php");
+	elgg_register_action('thewire/add', "$action_path/thewire/add.php");
+	elgg_register_action('thewire/delete', "$action_path/thewire/delete.php");
+	elgg_register_action('like', "$action_path/likes/add.php");
+	elgg_register_action('unlike', "$action_path/likes/delete.php");
 
 	elgg_extend_view('css/elgg', 'mfrb_template/css');
 	elgg_extend_view('js/elgg', 'mfrb_template/js');
+	elgg_extend_view('page/elements/foot', 'mfrb_template/handlebars_templates');
+
+	elgg_register_ajax_view('river/comments');
 
 	/**
 	 * Register or load external javascript and css files.
@@ -51,11 +60,11 @@ function mfrb_template_init() {
 	elgg_load_js('respond');
 
 	// js files only loaded by require.js
-	elgg_register_js('history', array( // history.js for full ajax and play with HTML5 pushState
+	elgg_define_js('history', array( // history.js for full ajax and play with HTML5 pushState
 		'src' => "$http_base/vendors/jquery.history",
 		'deps' => array('jquery')
 	));
-	elgg_register_js('scrollTo', array(
+	elgg_define_js('scrollTo', array(
 		'src' => "$http_base/vendors/jquery.scrollTo/jquery.scrollTo.min",
 		'deps' => array('jquery')
 	));
@@ -64,12 +73,16 @@ function mfrb_template_init() {
 	 * Register librairies
 	 */
 	elgg_register_library('thewire', $root . '/lib/thewire.php');
+	elgg_register_library('elgg:groups', "$root/lib/groups.php");
 
 	/*
 	 * Register page handlers
 	 */
+	// activity
+	elgg_unregister_page_handler('activity');
 	elgg_register_page_handler('activity', 'activity_page_handler');
-
+	// register avatar handler
+	elgg_register_page_handler('avatar', 'avatar_handler');
 
 	/**
 	 * Plugins hook handlers
@@ -84,48 +97,21 @@ function mfrb_template_init() {
 	// hook to modify menus
 	elgg_register_event_handler('pagesetup', 'system', 'mfrb_page_setup');
 
+	// hook to get avatar from gravatar
+	elgg_register_plugin_hook_handler('entity:icon:url', 'user', 'gravatar_avatar_hook', 900);
+
 	// Hook for thewire river menu
 	elgg_unregister_plugin_hook_handler('register', 'menu:river', 'likes_river_menu_setup');
 	elgg_register_plugin_hook_handler('register', 'menu:river', 'mfrb_likes_river_menu_setup', 400);
+
+	// Hook for page_owner
+	// ????? elgg_unregister_plugin_hook_handler('page_owner', 'system', 'default_page_owner_handler');
 
 	// non-members do not get visible links to RSS feeds
 	if (!elgg_is_logged_in()) {
 		elgg_unregister_plugin_hook_handler('output:before', 'layout', 'elgg_views_add_rss_link');
 	}
 
-}
-
-
-function activity_page_handler() {
-
-	if (elgg_is_logged_in()) {
-
-		// get user settings
-		/*$user = elgg_get_logged_in_user_entity();
-		$user_river_settings = json_decode($user->getPrivateSetting('deck_river_settings'), true);
-
-		// if first time, create settings for this user
-		if ( !$user_river_settings || !is_array($user_river_settings) ) {
-			$set = str_replace("&gt;", ">", elgg_get_plugin_setting('default_columns', 'elgg-deck_river'));
-			if (!$set) $set = elgg_echo('deck_river:settings:default_column:default');
-			eval("\$defaults = $set;");
-			$user->setPrivateSetting('deck_river_settings', json_encode($defaults));
-			$user_river_settings = $defaults;
-		}
-
-		if (!isset($page[0])) {
-			reset($user_river_settings);
-			$page[0] = key($user_river_settings);
-		}*/
-
-		elgg_set_context('activity');
-		include_once dirname(__FILE__) . '/pages/river.php';
-
-	} else {
-		forward('');
-	}
-
-	return true;
 }
 
 

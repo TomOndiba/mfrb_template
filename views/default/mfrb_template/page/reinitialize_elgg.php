@@ -37,4 +37,7 @@ if ($user instanceof ElggUser) {
 	echo "elgg.session.user = new elgg.ElggUser({$session_user});";
 }
 
+// test API
+//get_user_tokens($user->getGUID());
+//remove_expired_user_tokens();
 

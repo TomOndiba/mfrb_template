@@ -1,17 +1,17 @@
 <?php
 
-include '../vendors/url-scraper-php/website_parser.php';
+require_once('../vendors/url-scraper-php/website_parser.php');
 
-$url = $_GET['url'];
+$url = urldecode($_GET['url']);
 
 //Instance of WebsiteParser
 $parser = new WebsiteParser($url);
 
 //Get all hyper links
-$links = $parser->getHrefLinks();
+//$links = $parser->getHrefLinks();
 
-//Get all metadatas
-$title = $parser->getTitle();
+//Get title
+$title = $parser->getTitle(true);
 
 //Get all metadatas
 $metatags = $parser->getMetaTags();
@@ -19,11 +19,16 @@ $metatags = $parser->getMetaTags();
 //Get all image sources
 $images = $parser->getImageSources();
 
-echo json_encode(array(
+// Send as array
+$arr = array(
 	'url' => $url,
 	'title' => $title,
-	'links' => $links,
+	//'links' => $links,
 	'metatags' => $metatags,
 	'images' => $images,
 	'message' => $parser->message
-));
+);
+
+header('Content-Type: application/json; charset=UTF-8');
+
+echo json_encode($arr);

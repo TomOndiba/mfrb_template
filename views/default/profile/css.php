@@ -31,8 +31,8 @@
 	margin-bottom: 10px;
 }
 #profile-owner-block a.elgg-button-action {
-	margin-bottom: 4px;
-	display: table;
+	margin-bottom: 5px;
+	text-align: center;
 }
 .profile-admin-menu {
 	display: none;

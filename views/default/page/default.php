@@ -99,7 +99,7 @@ $body = <<<__BODY
 <div id="goTop" class="t250"><div class="mfrb-icon tooltip e" title="{$echo_btt}"></div></div>
 __BODY;
 
-$body .= elgg_view('page/elements/foot');
+$body .= '<div id="foot">' . elgg_view('page/elements/foot') . '</div>';
 
 echo '<script type="text/javascript">console.log("'. _elgg_services()->db->getQueryCount() .'", "queryCount");</script>'; // uncomment to see number of SQL calls
 
