@@ -12,10 +12,12 @@
  *
  **/
 
-include_once('js/init.php');
 include_once('js/history.php');
-include_once('js/thewire.php');
+include_once('js/history_tools.php');
 include_once('js/inline_vendors.php');
+include_once('js/tools.php');
+include_once('js/init.php');
+include_once('js/river.php');
 
 //readfile(dirname(dirname(dirname(__DIR__))) . '/vendors/jquery.scrollTo/jquery.scrollTo.min.js');
 

@@ -20,6 +20,7 @@ $files = array(
 	'groups',
 	'tagcloud',
 	'invitefriend',
+	'likes',
 	'logbrowser',
 	'logrotate',
 	'uservalidationbyemail',
@@ -34,4 +35,4 @@ foreach ($files as $file) {
 	$fr = array_merge($fr, $french);
 }
 
-add_translation('fr', $fr);
+return $fr;

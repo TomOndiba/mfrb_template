@@ -61,7 +61,7 @@
 	border: 1px solid #DCDCDC;
 	border-bottom: 0;
 	background: #eee;
-	margin: 0 0 0 5px;
+	margin: 0 0 0 10px;
 	border-radius: 3px 3px 0 0;
 }
 .elgg-tabs a {
@@ -93,7 +93,7 @@
 	font-size: 100%;
 	font-weight: normal;
 	line-height: 1.4em;
-	padding: 0 10px 1px 0;
+	padding: 10px 0;
 	color: #BABABA;
 }
 .elgg-breadcrumbs > li {
@@ -101,7 +101,7 @@
 }
 .elgg-breadcrumbs > li:after {
 	content: "\003E";
-	padding: 0 4px;
+	padding: 0 8px;
 	font-weight: normal;
 }
 .elgg-breadcrumbs > li > a {
@@ -111,11 +111,6 @@
 .elgg-breadcrumbs > li > a:hover {
 	color: #0054a7;
 	text-decoration: underline;
-}
-.elgg-main .elgg-breadcrumbs {
-	position: relative;
-	top: -1px;
-	left: 0;
 }
 
 /* ***************************************
@@ -256,7 +251,7 @@
 	border: 1px solid #DCDCDC;
 	border-bottom: 0;
 	background: #eee;
-	margin: 0 0 0 5px;
+	margin-left: 10px;
 	border-radius: 3px 3px 0 0;
 }
 .elgg-menu-filter > li.elgg-state-selected a:hover {
@@ -410,7 +405,7 @@
 	float: right;
 	margin-left: 15px;
 	font-size: 90%;
-	color: #AAA;
+	color: #999;
 	line-height: 16px;
 	height: auto;
 }
@@ -418,7 +413,7 @@
 	margin-left: 15px;
 }
 .elgg-menu-entity > li > a, .elgg-menu-annotation > li > a {
-	color: #AAA;
+	color: #999;
 }
 <?php // need to override .elgg-menu-hz ?>
 .elgg-menu-entity > li > a, .elgg-menu-annotation > li > a {
@@ -456,20 +451,23 @@
 	RIVER
 *************************************** */
 .elgg-menu-river {
-	float: right;
-	margin-left: 15px;
 	font-size: 90%;
-	color: #AAA;
+	color: #999;
 	line-height: 16px;
 	height: 16px;
 }
 .elgg-menu-river > li {
 	display: inline-block;
-	margin-left: 5px;
 }
-.elgg-menu-river > li > a {
-	color: #AAA;
-	height: 16px;
+.elgg-menu-river > li > a, .elgg-menu-item-comment > a {
+	color: #DEDEDE;
+	font-weight: bold;
+}
+.elgg-river-item:hover .elgg-menu-river > li > a, .elgg-river-item:hover .elgg-menu-item-comment > a {
+	color: #999;
+}
+.elgg-river-item:hover .elgg-menu-river > li > a:hover, .elgg-river-item:hover .elgg-menu-item-comment > a:hover {
+	color: #555;
 }
 <?php // need to override .elgg-menu-hz ?>
 .elgg-menu-river > li > a {

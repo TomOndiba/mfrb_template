@@ -42,16 +42,17 @@
 /*** topbar icon ***/
 .messages-new {
 	color: #FFF;
-	background-color: #FF0000;
-	border-radius: 10px;
-	box-shadow: -2px 2px 4px rgba(0, 0, 0, 0.50);
+	background-color: #d2322d;
+	border-radius: 20px;
 	position: absolute;
 	text-align: center;
-	line-height: 14px;
-	top: 4px;
-	left: 26px;
-	min-width: 16px;
-	height: 16px;
-	font-size: 10px;
+	line-height: 13px;
+	top: 5px;
+	left: auto;
+	right: 5px;
+	min-width: 17px;
+	height: 17px;
+	font-size: 12px;
 	font-weight: bold;
+	margin: 0;
 }

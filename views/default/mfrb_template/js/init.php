@@ -14,6 +14,10 @@ elgg.provide('mfrb');
  */
 elgg.mfrb_template.init = function() {
 
+	$(document).ready(function() {
+		elgg.river.autoload_river();
+	});
+
 	$('#toggle-sidebar').click(function() {
 		if ($(this).hasClass('fi-arrow-right')) {
 			var mainMargin = '-320px',
@@ -40,12 +44,26 @@ elgg.mfrb_template.init = function() {
 	if (!$('.elgg-page-admin').length) elgg.mfrb_template.resize();
 
 	// goTop button
-	var gT = $('#goTop');
-	$(window).bind('scroll.window', function() {
-		(this.scrollY > 150) ? gT.addClass('scrolled') : gT.removeClass('scrolled');
-		var shadowHeight = Math.log(this.scrollY/100);
-		$('.elgg-page-topbar').css('box-shadow', '0 0 ' + (shadowHeight/4+3) + 'px ' + shadowHeight + 'px rgba(0,0,0,0.1)');
+	var gT = $('#goTop'),
+		lastScrollY = 0;
+
+	$(window).on('scroll.window', function() {
+		var shadowHeight = Math.log(window.scrollY/100);
+
+		// goTop
+		(window.scrollY > 150) ? gT.addClass('scrolled') : gT.removeClass('scrolled');
+
+		// topbar shadow
+		$('div.elgg-page-topbar').css('box-shadow', '0 0 ' + (shadowHeight/4+3) + 'px ' + shadowHeight + 'px rgba(0,0,0,0.1)');
+
+		// Scroll fixed elements
+		elgg.mfrb_template.followScroll(lastScrollY);
+
+		lastScrollY = window.scrollY;
+
 	});
+	elgg.mfrb_template.followScroll();
+
 	gT.click(function() {
 		$(window).scrollTo(0, 500);
 	});
@@ -90,27 +108,89 @@ elgg.register_hook_handler('init', 'system', elgg.mfrb_template.init);
  * Resize, scroll and fix sidebar
  */
 elgg.mfrb_template.resize = function() {
-	var windowWidth = $(window).width(),
-		$es = $('.elgg-sidebar'),
-		$esa = $('.elgg-sidebar-alt'),
-		$body = $('.elgg-layout > .elgg-body'),
-		moved = $('.elgg-sidebar-alt .elgg-sidebar').length;
+	var windowWidth = $(window).width();
 
-	if (windowWidth < 1180 && !moved) {
-		$es.appendTo($esa);
-	} else if (windowWidth >= 1180 && moved) {
-		$es.insertAfter($body);
-	}
-	if (windowWidth < 940) {
-		$esa.css('margin-left', -320);
-	} else {
-		$esa.css('margin-left', 0);
-	}
-	$body.css('margin-right', 0);
+	$.each($('.elgg-layout'), function() {
+		var $this = $(this),
+			$es = $this.find('.elgg-sidebar'),
+			$esa = $this.find('.elgg-sidebar-alt'),
+			$body = $this.children('.elgg-body'),
+			moved = $this.find('.elgg-sidebar-alt .elgg-sidebar').length;
+
+		if (windowWidth < 1180 && !moved) {
+			$es.appendTo($esa);
+		} else if (windowWidth >= 1180 && moved) {
+			$es.insertAfter($body);
+		}
+		if (windowWidth < 940) {
+			$esa.css('margin-left', -320);
+		} else {
+			$esa.css('margin-left', 0);
+		}
+
+		$body.css('margin-right', 0);
+	});
+
+	elgg.mfrb_template.followScroll();
 	$('#toggle-sidebar').removeClass('fi-arrow-left').addClass('fi-arrow-right');
 };
 
+
+/**
+ * Contraints fixed elements to scroll and stay inside the border of the viewport
+ * @param  {[type]} lastScrollY   last window.scrollY. Helper to know direction of the scroll
+ * @return {[type]}               [description]
+ */
+elgg.mfrb_template.followScroll = function(lastScrollY) {
+	var wH = $(window).height(),
+		lastScrollY = lastScrollY || 0;
+
+	$.each($('.elgg-layout:not(.hidden)').find('div[follow-scroll], div.elgg-sidebar, div.elgg-sidebar-alt'), function() {//, div.elgg-sidebar-alt'), function() {
+		var windowY = window.scrollY,
+			scrollOffset = lastScrollY - windowY,
+			$this = $(this).removeClass('hidden'), // hidden to prevent ugly effect on first load
+			$elem = eval($this.attr('pushedBy')),
+			elemH = $elem ? $elem.outerHeight() : 0,
+			maxTop = 50, //$('.elgg-page-topbar').height(),
+			maxBottom = -($this.outerHeight()+maxTop - wH),
+			thisBottom = $this.css('bottom') == 'auto' ? maxBottom : $this.css('bottom'),
+			px = parseFloat(thisBottom) - parseFloat(scrollOffset);
+
+		if (maxBottom - elemH < 0) {
+			if (scrollOffset > 0) { // le contenu descend, on monte dans la page
+				if (windowY < elemH) maxBottom -= elemH - Math.max(0, windowY);
+				if (this.offsetTop >= maxTop || px < maxBottom) px = maxBottom;
+			} else {
+				if (px > 0) px = Math.max(0, maxBottom);
+				if (this.offsetTop >= maxTop && windowY <= 0) px = maxBottom - elemH;
+			}
+			$this.css({bottom: px +'px'});
+		} else if ($elem) {
+			var thisTop = wH - Math.min($elem[0].getBoundingClientRect().top, maxTop) + elemH + $this.outerHeight();
+
+			if (scrollOffset > 0) { // le contenu descend, on monte dans la page
+				if (windowY < elemH) {
+					px = thisTop;
+				} else {
+					px = maxBottom;
+				}
+			} else {
+				px = Math.min(thisTop, maxBottom);
+			}
+			$this.css({bottom: px +'px'});
+		}
+	});
+};
+
+
+
 elgg.mfrb_template.reload_js = function() {
+	// resize sidebars
+	elgg.mfrb_template.resize();
+	// load river
+	elgg.river.autoload_river();
+
+
 	// Send to Piwik tracker
 	if (typeof piwikTracker != 'undefined' && typeof piwikTracker.trackPageView == 'function') {
 		piwikTracker.setDocumentTitle(document.title);
@@ -121,70 +201,47 @@ elgg.mfrb_template.reload_js = function() {
 elgg.register_hook_handler('history', 'reload_js', elgg.mfrb_template.reload_js);
 
 
+elgg.history.register_storable_page('adherents/map', {
+	callbackOnStore: function() {
+		$('.elgg-page-topbar').removeClass('shadow');
+	},
+	callbackOnRestore: function(elem) {
+		// change state-selected in elgg-page-topbar
+		$('.elgg-page-topbar .elgg-state-selected').removeClass('elgg-state-selected');
+		$('.elgg-page-topbar .elgg-menu-item-map-adherent').addClass('elgg-state-selected');
 
-/**
- * Update each minute all friendly times
- *
- */
-elgg.provide('elgg.friendly_time');
-
-elgg.friendly_time = function(time) {
-
-	//TODO friendly:time hook
-
-	diff = new Date().getTime()/1000 - parseInt(time);
-
-	minute = 60;
-	hour = minute * 60;
-	day = hour * 24;
-
-	if (diff < minute) {
-			return elgg.echo("friendlytime:justnow");
-	} else if (diff < hour) {
-		diff = Math.round(diff / minute);
-		if (diff == 0) {
-			diff = 1;
-		}
-
-		if (diff > 1) {
-			return elgg.echo("friendlytime:minutes", [diff]);
-		} else {
-			return elgg.echo("friendlytime:minutes:singular", [diff]);
-		}
-	} else if (diff < day) {
-		diff = Math.round(diff / hour);
-		if (diff == 0) {
-			diff = 1;
-		}
-
-		if (diff > 1) {
-			return elgg.echo("friendlytime:hours", [diff]);
-		} else {
-			return elgg.echo("friendlytime:hours:singular", [diff]);
-		}
-	} else {
-		diff = Math.round(diff / day);
-		if (diff == 0) {
-			diff = 1;
-		}
-
-		if (diff > 1) {
-			return elgg.echo("friendlytime:days", [diff]);
-		} else {
-			return elgg.echo("friendlytime:days:singular", [diff]);
-		}
+		// remove some stuff
+		$('.elgg-menu-hover, .tipsy, .elgg-popup:not(.pinned)').remove();
+		elem.fadeIn().removeClass('hidden');
+		$('.elgg-page-topbar').addClass('shadow');
 	}
-}
+});
 
-elgg.friendly_time.update = function() {
-	$('.elgg-page .elgg-friendlytime').each(function(){
-		var acronym = $(this).find('acronym');
-		acronym.html(elgg.friendly_time(acronym.attr('time')));
-	});
-}
 
-elgg.friendly_time.init = function() {
-	elgg.friendly_time.update();
-	setInterval(elgg.friendly_time.update, 1000*60); // each 60 sec
-};
-elgg.register_hook_handler('init', 'system', elgg.friendly_time.init);
+elgg.history.register_storable_page('adherents/list', {
+	callbackOnRestore: function(elem) {
+		// change state-selected in elgg-page-topbar
+		$('.elgg-page-topbar .elgg-state-selected').removeClass('elgg-state-selected');
+		$('.elgg-page-topbar .elgg-menu-item-adherents').addClass('elgg-state-selected');
+
+		// remove some stuff
+		$('.elgg-menu-hover, .tipsy, .elgg-popup:not(.pinned)').remove();
+		elem.fadeIn().removeClass('hidden');
+	}
+});
+
+
+elgg.history.register_storable_page('adherents/statistics', {
+	callbackOnRestore: function(elem) {
+		// change state-selected in elgg-page-topbar
+		$('.elgg-page-topbar .elgg-state-selected').removeClass('elgg-state-selected');
+		$('.elgg-page-topbar .elgg-menu-item-adherents').addClass('elgg-state-selected');
+
+		// remove some stuff
+		$('.elgg-menu-hover, .tipsy, .elgg-popup:not(.pinned)').remove();
+		elem.fadeIn().removeClass('hidden');
+	}
+});
+
+
+

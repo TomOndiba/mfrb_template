@@ -14,13 +14,14 @@ if ($post) {
 
 $post_input = elgg_view('input/plaintext', array(
 	'name' => 'body',
-	'class' => 'mtm',
-	'id' => 'thewire-textarea',
-	'rows' => 3
+	'class' => 'mtm thewire-textarea',
+	'autoresize' => '',
+	'placeholder' => elgg_echo('mfrb:thewire:placeholder')
 ));
 
 $submit_button = elgg_view('input/submit', array(
 	'value' => $text,
+	'class' => 'elgg-button elgg-button-submit float-alt',
 	'id' => 'thewire-submit-button',
 ));
 
@@ -29,7 +30,7 @@ $loader = elgg_view('graphics/ajax_loader', array('hidden' => false));
 echo <<<HTML
 	$post_input
 
-<div id="linkbox" class="hidden phm pvs">
+<div class="linkbox hidden phm pvs">
 	$loader
 </div>
 

@@ -170,7 +170,7 @@ a.elgg-widget-collapsed:before {
 	width: auto;
 	padding: 10px;
 	border-bottom: 1px solid #DCDCDC;
-	background-color: #F9F9F9;
+	background-color: #F3F3F3;
 }
 .elgg-widget-content {
 	padding: 10px;

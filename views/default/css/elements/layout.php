@@ -105,6 +105,9 @@
 	margin: 0;
 	border-left: 1px solid #EBEBEB;
 }
+.elgg-head + .elgg-main + .elgg-sidebar {
+	/*top: 33px;*/
+}
 .elgg-sidebar-alt {
 	position: relative;
 	padding: 32px 30px 20px 0;
@@ -125,7 +128,7 @@
 }
 .elgg-layout-one-sidebar .elgg-main {
 	float: left;
-	width: 72.525252%;
+	width: 860px;
 }
 .elgg-layout-two-sidebar .elgg-main {
 	float: left;

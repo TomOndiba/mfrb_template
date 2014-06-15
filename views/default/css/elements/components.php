@@ -146,9 +146,6 @@
 /* ***************************************
 	River
 *************************************** */
-.elgg-list-river {
-	margin-top: -10px;
-}
 .elgg-river-layout .elgg-list-river {
 	border-top: 1px solid #DCDCDC;
 }
@@ -158,19 +155,22 @@
 .elgg-river-item .elgg-pict {
 	margin-right: 20px;
 }
-.elgg-river-timestamp {
+.elgg-river-timestamp,
+.elgg-friendlytime time {
 	color: #666;
 	font-size: 85%;
 	font-style: italic;
-	line-height: 1.2em;
 }
 
 .elgg-river-attachments,
 .elgg-river-message,
 .elgg-river-content {
 	border-left: 1px solid #DCDCDC;
-	margin: 8px 0 5px 0;
+	margin: 10px 0 10px 0;
 	padding-left: 8px;
+}
+.elgg-river-comments .elgg-river-message {
+	margin-bottom: 5px;
 }
 .elgg-river-attachments .elgg-avatar,
 .elgg-river-attachments .elgg-icon {
@@ -196,26 +196,22 @@
 
 <?php //@todo components.php ?>
 .elgg-river-comments {
-	margin: 0;
+	border-top: 1px solid #DCDCDC;
+}
+.elgg-river-comments > li {
+	border-top: 1px solid #DCDCDC;
+}
+.elgg-river-comments > li:first-child {
 	border-top: none;
-}
-.elgg-river-comments li:first-child {
-	border-radius: 3px 0 0;
-}
-.elgg-river-comments li:last-child {
-	border-radius-bottomleft: 0 0 5px 5px;
-}
-.elgg-river-comments li {
-	background-color: #EEE;
-	border-bottom: none;
-	padding: 4px 4px 4px 10px;
-	margin-bottom: 2px;
-}
-.elgg-river-comments li .elgg-output {
-	padding-right: 5px;
 }
 .elgg-river-comments .elgg-media {
 	padding: 0;
+}
+.elgg-river-comments time {
+	line-height: 1em;
+}
+.elgg-river-comments .elgg-avatar {
+	margin-top: 4px;
 }
 .elgg-river-more {
 	background-color: #EEE;
@@ -225,18 +221,39 @@
 	margin-bottom: 2px;
 }
 
-<?php //@todo location-dependent styles ?>
-.elgg-river-item form {
-	background-color: #EEE;
-	padding: 6px;
-	border-radius: 3px;
-	height: auto;
+
+.elgg-form-comment-river {
+	position: relative;
+	border-top: 1px solid #DCDCDC;
 }
-.elgg-river-item input[type=text] {
-	width: 78%;
+.elgg-form-comment-river:before,
+.elgg-form-comment-river:after {
+	content: " ";
+	position: absolute;
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 15px 15px 0 0;
+	left: 20px;
+	transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
 }
-.elgg-river-item input[type=submit] {
-	margin: 0 0 0 10px;
+.elgg-form-comment-river:before{
+	border-color: #DCDCDC transparent transparent transparent;
+	top: 13px;
+	z-index: -1;
+}
+.elgg-form-comment-river:after {
+	border-color: white transparent transparent transparent;
+	top: 14px;
+}
+.elgg-form-comment-river.focus:before {
+	box-shadow: 0 0 2px #F1C40F;
+	border-color: #F1C40F transparent transparent transparent;
+}
+.elgg-form-comment-river.focus:after {
+	border-color: white transparent transparent transparent;
 }
 
 

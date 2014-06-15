@@ -37,7 +37,7 @@ if (!isset($vars['filter']) && elgg_is_logged_in() && $context) {
 	$tabs = array(
 		'all' => array(
 			'text' => elgg_echo('all'),
-			'href' => (isset($vars['all_link'])) ? $vars['all_link'] : "$context/all",
+			'href' => (isset($vars['all_link'])) ? $vars['all_link'] : "$context",
 			'selected' => ($filter_context == 'all'),
 			'priority' => 200,
 		),
@@ -61,7 +61,7 @@ if (!isset($vars['filter']) && elgg_is_logged_in() && $context) {
 	}
 }
 
-$filter = elgg_view('page/layouts/elements/filter', $vars);
+$filter = elgg_view_menu('filter', array('sort_by' => 'priority', 'class' => 'elgg-menu-hz elgg-menu-filter-river'));
 $vars['content'] = $filter . $vars['content'];
 
 $class = 'elgg-layout elgg-layout-two-sidebar clearfix';

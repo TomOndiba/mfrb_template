@@ -94,8 +94,8 @@ class WebsiteParser
         CURLOPT_RETURNTRANSFER => true, // return web page
         CURLOPT_HEADER => false, // don't return headers
         CURLOPT_FOLLOWLOCATION => true, // follow redirects
-        CURLOPT_ENCODING => "", // handle all encodings
-        CURLOPT_USERAGENT => "spider", // who am i
+        CURLOPT_ENCODING => '', // handle all encodings
+        CURLOPT_USERAGENT => 'spider', // who am i
         CURLOPT_AUTOREFERER => true, // set referrer on redirect
         CURLOPT_CONNECTTIMEOUT => 60, // timeout on connect
         CURLOPT_TIMEOUT => 120, // timeout on response
@@ -318,6 +318,7 @@ class WebsiteParser
      */
     private function grabContent()
     {
+        require_once('Encoding.php');
 
         try {
             $ch = curl_init($this->target_url);
@@ -325,6 +326,7 @@ class WebsiteParser
             curl_setopt_array($ch, $this->curl_options);
 
             $this->content = curl_exec($ch);
+            $this->content = Encoding::toUTF8($this->content); // force encoding to UTF-8
 
             if ($this->content === FALSE) {
                 throw new Exception();

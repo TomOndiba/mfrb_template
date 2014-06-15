@@ -21,13 +21,15 @@ elgg_load_library('thewire');
 $post = new ElggObject();
 $post->subtype = 'thewire';
 $post->owner_guid = elgg_get_logged_in_user_guid();
-$post->access_id = ACCESS_PUBLIC;
+$post->container_guid = get_input('container_guid', elgg_get_logged_in_user_guid());
 $post->method = 'site'; //method: site, email, api, ...
 
 $post->link_description = get_input('link_description', false);
 $post->link_name = get_input('link_name', false);
 $post->link_picture = get_input('link_picture', false);
 $post->link_url = get_input('link_url', false);
+
+$post->access_id = ACCESS_PUBLIC;
 
 // no html tags allowed so we escape
 $post->description = htmlspecialchars($body, ENT_NOQUOTES, 'UTF-8');
@@ -45,11 +47,12 @@ if ($parent_guid) {
 $guid = $post->save();
 
 if ($guid) {
-	elgg_create_river_item(array(
+	$item_id = elgg_create_river_item(array(
 		'view' => 'river/object/thewire/create',
 		'action_type' => 'create',
 		'subject_guid' => $post->owner_guid,
 		'object_guid' => $post->guid,
+		'target_guid' => $post->container_guid
 	));
 
 	// let other plugins know we are setting a user status
@@ -61,10 +64,17 @@ if ($guid) {
 		'origin' => 'thewire',
 	);
 	elgg_trigger_plugin_hook('status', 'user', $params);
+
+	$item = get_wire_object(elgg_get_river(array('id' => $item_id))[0]);
+
+	elgg_nodejs_broadcast(array(
+		'type'=> 'new_wire',
+		'message' => get_wire_object($item)
+	));
+
+	echo json_encode($item);
+
 } else {
 	register_error(elgg_echo('thewire:notsaved'));
-	forward(REFERER);
+	echo json_encode(false);
 }
-
-system_message(elgg_echo('thewire:posted'));
-forward(REFERER);

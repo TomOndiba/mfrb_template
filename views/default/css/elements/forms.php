@@ -38,6 +38,10 @@ input, textarea {
 	width: calc(100% - 4px);
 	border-radius: 3px;
 	margin: 5px 2px;
+	outline: none;
+}
+textarea {
+	resize: vertical;
 }
 input[type=email]:focus,
 input[type=password]:focus,

@@ -1,6 +1,12 @@
 /****************************************
 	LAYOUT
 *****************************************/
+div[follow-scroll] {
+	position: fixed;
+}
+:focus {
+	outline: none;
+}
 html, body {
 	margin-bottom: 0;
 }
@@ -23,7 +29,7 @@ html, body {
 	box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 3px 3px !important;
 }
 .elgg-page-body {
-	padding: 52px 20px 0;
+	padding: 50px 20px 0;
 }
 .elgg-page-default .elgg-page-body > .elgg-inner {
 	max-width: 1140px;
@@ -31,19 +37,22 @@ html, body {
 .elgg-sidebar {
 	border-left: none;
 	padding: 20px 0 20px 20px;
-	margin: 0;
+	margin: 0 0 0 880px;
 	width: 260px;
+	position: fixed;
 }
 .elgg-sidebar-alt {
 	border-right: none;
 	padding: 20px 20px 20px 0;
 	margin: 0;
 	width: 260px;
+	position: fixed;
 }
 .elgg-layout-two-sidebar .elgg-main {
 	float: left;
 	width: 620px;
 	padding: 20px;
+	margin-left: 260px;
 }
 .elgg-page-body .large-layout {
 	left: 5%;
@@ -53,14 +62,17 @@ html, body {
 .elgg-page-body .large-layout > .elgg-body {
 	width: calc(100% - 260px);
 }
+.elgg-page-body .large-layout > .elgg-sidebar {
+	margin: 0 0 0 calc(100% - 260px - 10%);
+}
 #goTop {
 	position: fixed;
 	right: 20px;
-	bottom: -50px;
+	top: -50px;
 	opacity: 0;
 }
 #goTop.scrolled {
-	bottom: 10px;
+	top: 70px;
 	opacity: 0.7;
 }
 #goTop div:before {
@@ -94,7 +106,6 @@ html, body {
 }
 .elgg-menu-site > li > a {
 	color: #333;
-	height: 48px;
 	font-weight: bold;
 }
 .elgg-menu-site > li:hover > a {
@@ -104,14 +115,20 @@ html, body {
 .elgg-menu-site > .elgg-state-selected > a {
 	background: none;
 	color: #333;
-	border-bottom: 3px solid #D35A4D;
 }
 .elgg-menu-site > li > a:focus, .elgg-menu-topbar > li > a:focus {
 	color: #C0392B;
 }
-.elgg-menu-topbar > li {
+.elgg-menu-site > li, .elgg-menu-topbar > li {
 	height: 48px;
+	border-bottom: 0px solid #D35A4D;
+	-webkit-transition: all 500ms ease;
+	-moz-transition: all 500ms ease;
+	-ms-transition: all 500ms ease;
+	-o-transition: all 500ms ease;
+	transition: all 500ms ease;
 }
+.elgg-menu-site > li.elgg-state-selected,
 .elgg-menu-topbar > li.elgg-state-selected {
 	border-bottom: 3px solid #D35A4D;
 }
@@ -277,22 +294,28 @@ html {
 	.elgg-layout-two-sidebar .elgg-main {
 		padding-right: 0;
 	}
+	.elgg-sidebar-alt .elgg-sidebar {
+		margin: 0;
+		padding: 10px 0 20px 0;
+		position: relative;
+		bottom: 0 !important;
+		border-top: 1px solid #DEDEDE;
+		width: 240px;
+	}
 }
 @media (max-width: 939px) {
 	body {
 		overflow-x: hidden;
 	}
 	.elgg-sidebar-alt {
-		position: absolute;
 		width: 320px;
 		z-index: 1;
 		background: white;
-		position: absolute;
 		margin-left: -100%;
 	}
-	.elgg-sidebar {
-		float: none;
-		padding: 20px 0;
+	.elgg-sidebar-alt .elgg-sidebar {
+		padding: 0;
+		width: 300px;
 	}
 	.elgg-layout-two-sidebar .elgg-main {
 		width: 100%;
@@ -497,87 +520,7 @@ html {
 		margin-left: 0;
 		margin-right: 15px;
 	}
-	.elgg-subtext {
-		float: left;
-		margin-right: 15px;
-	}
 }
-
-
-
-/*
- * LINKBOX
- */
-
-#linkbox {
-	margin: 0;
-}
-#linkbox .elgg-menu {
-	margin-right: -5px;
-}
-#linkbox .image-wrapper {
-	height: 80px;
-	line-height: 80px;
-	overflow: hidden;
-	width: 80px;
-	background: #DEDEDE;
-	float: left;
-	margin: 8px;
-	position: relative;
-}
-#linkbox .elgg-image {
-	margin: 0 0px 0 -8px;
-	background: white;
-	position: absolute;
-	max-height: 460px;
-	overflow: auto;
-	max-width: 576px;
-}
-#linkbox .elgg-image:hover {
-	z-index: 7004;
-	box-shadow: 0 0 4px #CCC;
-	cursor: pointer;
-}
-#linkbox .elgg-image + .elgg-body {
-	margin-left: 90px;
-	min-height: 87px;
-}
-#linkbox li.image-wrapper {
-	display: none;
-}
-#linkbox div.image-wrapper:before {
-	content: "\2715";
-	position: absolute;
-	color: transparent;
-	z-index: 10000;
-	font-size: 6em;
-	width: 80px;
-	background: transparent;
-	left: 0;
-}
-#linkbox div.image-wrapper:active:before {
-	font-size: 7em;
-}
-#linkbox div.image-wrapper:hover:before, #linkbox div.image-wrapper.noimg:before {
-	color: red;
-	background: rgba(0, 0, 0, 0.3);
-}
-#linkbox li.image-wrapper:hover {
-	-webkit-box-shadow: 0 0 3px 3px #F1C40F;
-	box-shadow: 0 0 3px 3px #F1C40F;
-}
-#linkbox .elgg-image:hover li {
-	display: block;
-}
-#linkbox .link_name[contenteditable]:hover, #linkbox .link_description[contenteditable]:hover, #linkbox .link_name[contenteditable]:focus, #linkbox .link_description[contenteditable]:focus {
-	background: rgba(241, 196, 15, 0.5);
-}
-#linkbox .link_description {
-	min-height: 18px;
-	font-size: .9em;
-	margin-top: 6px;
-}
-
 
 
 
@@ -597,20 +540,19 @@ html {
 
 .messages-new {
 	color: #FFF;
-	background-color: #FF0000;
-	border-radius: 4px;
-	position: relative;
+	background-color: #d2322d;
+	border-radius: 20px;
+	position: absolute;
 	text-align: center;
-	line-height: normal;
-	top: -4px;
-	left: 0;
-	min-width: 12px;
-	height: 12px;
-	font-size: 0.6em;
+	line-height: 18px;
+	top: 5px;
+	left: auto;
+	right: 5px;
+	min-width: 17px;
+	height: 17px;
+	font-size: 12px;
 	font-weight: bold;
-	box-shadow: none;
-	padding: 3px 5px;
-	margin-right: 10px;
+	margin: 0;
 }
 
 .footable.breakpoint>tbody>tr>td>span.footable-toggle, .footable>thead>tr>th>span.footable-sort-indicator {

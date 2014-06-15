@@ -30,4 +30,5 @@ echo $scss->compile($files);
 
 ?>
 
-// End of all mfrb_template css files
+/* End of all mfrb_template css files */
+
