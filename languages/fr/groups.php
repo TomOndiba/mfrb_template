@@ -20,6 +20,7 @@ $french = array(
 	'groups:memberof' => "Les groupes dont je suis membre",
 	'groups:user' => "Les groupes de %s",
 	'groups:all' => "Tous les groupes",
+	'groups:yours' => "Mes groupes",
 	'groups:add' => "Créer un nouveau groupe",
 	'groups:edit' => "Modifier le groupe",
 	'groups:title:edit' => "Modifier le groupe %s",

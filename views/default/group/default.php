@@ -1,7 +1,7 @@
-<?php 
+<?php
 /**
  * Group entity view
- * 
+ *
  * @package ElggGroups
  */
 
@@ -23,18 +23,6 @@ if (elgg_in_context('owner_block') || elgg_in_context('widgets')) {
 if ($vars['full_view'] === true) {
 
 	echo elgg_view('groups/profile/summary', $vars);
-
-} else if ($vars['full_view'] == 'small_list') {
-
-	$params = array(
-		'entity' => $group,
-		'metadata' => '',
-		'subtitle' => '',
-	);
-	$params = $params + $vars;
-	$list_body = elgg_view('group/elements/summary', $params);
-
-	echo $list_body;
 
 } else {
 
