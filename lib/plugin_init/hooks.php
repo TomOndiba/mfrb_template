@@ -28,6 +28,17 @@ function mfrb_setup_head($hook, $type, $return, $params) {
 		'content' => 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'
 	);
 
+	// https://developer.chrome.com/multidevice/android/installtohomescreen
+	$data['metas'][] = array(
+		'name' => 'mobile-web-app-capable',
+		'content' => 'yes',
+	);
+	$data['metas'][] = array(
+		'name' => 'apple-mobile-web-app-capable',
+		'content' => 'yes',
+	);
+
+
 	// Remove favicons
 	foreach ($return['links'] as $key => $link) {
 		if ($link['rel'] == 'icon') unset($return['links'][$key]);

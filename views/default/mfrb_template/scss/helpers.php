@@ -5,19 +5,26 @@
 	box-sizing: border-box;
 }
 
+.t100 { /* transition 100ms */
+	-webkit-transition: all .1s ease;
+	-moz-transition: all .1s ease;
+	-ms-transition: all .1s ease;
+	-o-transition: all .1s ease;
+	transition: all .1s ease;
+}
 .t250 { /* transition 250ms */
-	-webkit-transition: all 250ms ease;
-	-moz-transition: all 250ms ease;
-	-ms-transition: all 250ms ease;
-	-o-transition: all 250ms ease;
-	transition: all 250ms ease;
+	-webkit-transition: all .25s ease;
+	-moz-transition: all .25s ease;
+	-ms-transition: all .25s ease;
+	-o-transition: all .25s ease;
+	transition: all .25s ease;
 }
 .t500 { /* transition 500ms */
-	-webkit-transition: all 500ms ease;
-	-moz-transition: all 500ms ease;
-	-ms-transition: all 500ms ease;
-	-o-transition: all 500ms ease;
-	transition: all 500ms ease;
+	-webkit-transition: all .5s ease;
+	-moz-transition: all .5s ease;
+	-ms-transition: all .5s ease;
+	-o-transition: all .5s ease;
+	transition: all .5s ease;
 }
 
 .rcw90 { /* clockwise 90° (sens des aiguilles d'une montre de 90°) */

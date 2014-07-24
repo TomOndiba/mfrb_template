@@ -175,7 +175,7 @@ function get_comment_river($comment) {
  *
  * @return bool
  */
-function river_get_items($limit = 10, $offset = 0) {
+/*function river_get_items($limit = 10, $offset = 0) {
 	$user = elgg_get_logged_in_user_guid();
 
 	$params = array(
@@ -210,7 +210,7 @@ elgg_ws_expose_function('river.get_items',
 	'GET',
 	false,
 	true
-);
+);*/
 
 
 
