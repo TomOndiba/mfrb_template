@@ -16,6 +16,8 @@
 readfile(__DIR__ . '/scss/foundation-icons.css');
 readfile(__DIR__ . '/scss/mfrb.css');
 readfile(__DIR__ . '/scss/mfrb_activity.css');
+
+readfile(__DIR__ . '/scss/select2.css');
 //readfile(__DIR__ . '/scss/helpers.css');
 
 ob_start();

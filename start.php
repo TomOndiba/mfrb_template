@@ -13,7 +13,7 @@
  * Define global static variable
  */
 define('MFRB_TEMPLATE', true); // usefull to say others plugins mfrb_template is active
-
+const PLUGIN_ID = 'mfrb_template';
 
 
 /**
@@ -36,7 +36,7 @@ elgg_register_event_handler('init','system','mfrb_template_init');
 function mfrb_template_init() {
 
 	$root = dirname(__FILE__);
-	$http_base = '/mod/mfrb_template';
+	$http_base = '/mod/' . PLUGIN_ID;
 
 	// actions
 	$action_path = "$root/actions";
@@ -47,16 +47,16 @@ function mfrb_template_init() {
 	elgg_register_action('like', "$action_path/likes/add.php");
 	elgg_register_action('unlike', "$action_path/likes/delete.php");
 
-	elgg_extend_view('css/elgg', 'mfrb_template/css');
-	elgg_extend_view('js/elgg', 'mfrb_template/js');
-	elgg_extend_view('page/elements/foot', 'mfrb_template/handlebars_templates');
+	elgg_extend_view('css/elgg', PLUGIN_ID . '/css');
+	elgg_extend_view('js/elgg', PLUGIN_ID . '/js');
+	elgg_extend_view('page/elements/foot', PLUGIN_ID . '/handlebars_templates');
 
 	elgg_register_ajax_view('river/comments');
 
 	/**
 	 * Register or load external javascript and css files.
 	 */
-	elgg_register_js('respond', 'mod/mfrb_template/vendors/respond.min.js');
+	elgg_register_js('respond', 'mod/' . PLUGIN_ID . '/vendors/respond.min.js');
 	elgg_load_js('respond');
 
 	// js files only loaded by require.js
@@ -66,6 +66,10 @@ function mfrb_template_init() {
 	));
 	elgg_define_js('scrollTo', array(
 		'src' => "$http_base/vendors/jquery.scrollTo/jquery.scrollTo.min",
+		'deps' => array('jquery')
+	));
+	elgg_define_js('select2', array(
+		'src' => "$http_base/vendors/select2/select2",
 		'deps' => array('jquery')
 	));
 

@@ -34,6 +34,35 @@ elgg.river.init = function() {
 	});
 
 	/*
+	 * Notify box
+	 */
+	$('body').on('click', '.select2', function() {
+		var $this = $(this);
+		require(['select2'], function() {
+			$.fn.select2.locales['fr'] = {
+				formatMatches: function (matches) { return matches + " résultats sont disponibles, utilisez les flèches haut et bas pour naviguer."; },
+				formatNoMatches: function () { return "Aucun résultat trouvé"; },
+				formatInputTooShort: function (input, min) { var n = min - input.length; return "Saisissez " + n + " caractère" + (n == 1? "" : "s") + " supplémentaire" + (n == 1? "" : "s") ; },
+				formatInputTooLong: function (input, max) { var n = input.length - max; return "Supprimez " + n + " caractère" + (n == 1? "" : "s"); },
+				formatSelectionTooBig: function (limit) { return "Vous pouvez seulement sélectionner " + limit + " élément" + (limit == 1 ? "" : "s"); },
+				formatLoadMore: function (pageNumber) { return "Chargement de résultats supplémentaires…"; },
+				formatSearching: function () { return "Recherche en cours…"; }
+			};
+			$.extend($.fn.select2.defaults, $.fn.select2.locales['fr']);
+
+			var formatResult = function(user) {
+					return '<img src="'+user.avatar.tiny+'" class="float prs" height="21px"/>' + user.name;
+				};
+
+			$this.select2({
+				multiple: true,
+				data: {results: users, text: 'name'},
+				formatResult: formatResult
+			}).focus();
+		});
+	});
+
+	/*
 	 * River
 	 */
 	$('body')
@@ -215,6 +244,7 @@ elgg.register_hook_handler('nodejs', 'message:new_wire', elgg.river.nodejs.new_w
  * @return {json}         json
  */
 elgg.river.format_river = function(elem) {
+	elgg.river.store_user(elem.subject);
 	elem.friendlytime = elgg.friendly_time(elem.posted);
 	elem.actions = {
 		like: elgg.security.addToken(elgg.get_site_url()+'action/like?guid='+elem.object_guid),
@@ -234,6 +264,20 @@ elgg.river.format_river = function(elem) {
 	}
 	if (elem.summary && elgg.get_page_owner_guid() == elem.target_guid) delete elem.summary;
 	return elem;
+};
+
+
+
+/**
+ * Store user in a global var users
+ * @param  {json} user    a user object
+ */
+users = [];
+elgg.river.store_user = function(user) {
+	if (!$.grep(users, function(e){ return e.guid === user.guid; }).length) {
+		user.id = user.guid; // usefull for select2
+		users.push(user);
+	}
 };
 
 

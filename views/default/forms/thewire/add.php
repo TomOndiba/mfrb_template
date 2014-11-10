@@ -19,13 +19,14 @@ $post_input = elgg_view('input/plaintext', array(
 	'placeholder' => elgg_echo('mfrb:thewire:placeholder')
 ));
 
+$loader = elgg_view('graphics/ajax_loader', array('hidden' => false));
+
+$notify = elgg_echo('mfrb:thewire:notify:placeholder');
 $submit_button = elgg_view('input/submit', array(
 	'value' => $text,
 	'class' => 'elgg-button elgg-button-submit float-alt',
 	'id' => 'thewire-submit-button',
 ));
-
-$loader = elgg_view('graphics/ajax_loader', array('hidden' => false));
 
 echo <<<HTML
 	$post_input
@@ -34,6 +35,9 @@ echo <<<HTML
 	$loader
 </div>
 
+<div class="notifybox mbn">
+	<input name="notified_users" type="text" class="select2" placeholder="{$notify}" width="100%" />
+</div>
 <div class="elgg-foot mts">
 	$submit_button
 </div>

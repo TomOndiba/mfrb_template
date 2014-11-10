@@ -72,6 +72,15 @@ if ($guid) {
 		'message' => get_wire_object($item)
 	));
 
+	$notified_users = get_input('notified_users', false);
+	if ($notified_users) {
+		$notified_users = explode(',', $notified_users);
+		foreach ($notified_users as $user) {
+		}
+		$subject = elgg_echo('thewire:notify:subject', array(elgg_get_logged_in_user_entity()->name));
+		notify_user($notified_users, $post->owner_guid, $subject, 'aui');
+	}
+
 	echo json_encode($item);
 
 } else {

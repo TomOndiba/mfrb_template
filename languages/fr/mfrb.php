@@ -20,11 +20,21 @@ $french = array(
 	'mfrb:river:more_comments' => "Afficher %s commentaires plus anciens",
 	'mrfb:river:block_infos' => "Infos",
 	'mfrb:thewire:placeholder' => "Et vous, que faites-vous pour faire avancer l'idée ?",
+	'mfrb:thewire:notify:placeholder' => "Notifier quelqu'un",
 
 	/**
 	 * The wire river
 	 */
 	'river:create:object:thewire' => "dans %s",
+
+	/**
+	 * Notifications
+	 */
+	'thewire:notify:summary' => 'New wire post: %s',
+	'thewire:notify:subject' => "%s vous a notifié",
+	'thewire:notify:reply' => '%s responded to %s on the wire:',
+	'thewire:notify:post' => '%s posted on the wire:',
+	'thewire:notify:footer' => "View and reply:\n%s",
 
 );
 
