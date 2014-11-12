@@ -24,13 +24,16 @@ switch ($page_type) {
 		break;
 	case 'owner':
 		$page_filter = 'subject';
-		$subject_username = get_input('subject_username', '', false);
-		$subject = get_user_by_username($subject_username);
-		if (!$subject) {
-			register_error(elgg_echo('river:subject:invalid_subject'));
-			forward('');
+		$options['subject_guid'] = get_input('subject_guid', false);
+		if (!$options['subject_guid']) {
+			$subject_username = get_input('subject_username', '', false);
+			$subject = get_user_by_username($subject_username);
+			if (!$subject) {
+				register_error(elgg_echo('river:subject:invalid_subject'));
+				forward('');
+			}
+			$options['subject_guid'] = $subject->getGUID();
 		}
-		$options['subject_guid'] = $subject->getGUID();
 		//$options['joins'][] = "JOIN {$dbprefix}river r2 ON r2.object_guid = rv.target_guid";
 		//$options['wheres'][] = "( r2.subject_guid IN (".$subject->getGUID().") AND rv.subtype = 'thewire' ) OR (1 = 1) ";
 		break;
