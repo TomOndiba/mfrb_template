@@ -69,9 +69,11 @@
 		<div class="elgg-body">
 			<div class="elgg-river-summary">
 				<a href="{{subject.url}}" class="elgg-river-subject">{{subject.name}}</a>&nbsp;{{{summary}}}
-				<span class="elgg-friendlytime">
-					<time title="%pm %28 %b %2014 à %CEST" datetime="{{posted}}" time="{{posted}}">{{friendlytime}}</time>
-				</span>
+				<a href="<?php echo $site_url; ?>message/view/{{object_guid}}">
+					<span class="elgg-friendlytime">
+						<time title="%pm %28 %b %2014 à %CEST" datetime="{{posted}}" time="{{posted}}">{{friendlytime}}</time>
+					</span>
+				</a>
 			</div>
 			<div class="elgg-river-message">{{{message}}}</div>
 			{{#if attachment}}

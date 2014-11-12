@@ -198,7 +198,6 @@ elgg.river.prepend_river = function(elem) {
 
 	// add mine if we are owner of the message, with subject_guid
 	if (elem.subject_guid == elgg.get_logged_in_user_guid()) {
-		console.log('ii');
 		$rivers.push($('.elgg-list-river[data-page_type="mine"]:not([load-river])'));
 	}
 	// add group feed with target_guid
@@ -352,7 +351,7 @@ elgg.river.load_river = function(param, callback) {
 			});
 			callback();
 
-			if (response.length < 20) river.find('.elgg-ajax-loader').addClass('end').html(elgg.echo('mfrb:river:end'));
+			if (response.length < 20 && !river.hasClass('single-view')) river.find('.elgg-ajax-loader').addClass('end').html(elgg.echo('mfrb:river:end'));
 			if (response.length == 0) river.find('.elgg-ajax-loader').addClass('end').html(elgg.echo('mfrb:river:none'));
 		}
 	});

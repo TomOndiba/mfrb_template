@@ -85,6 +85,7 @@ function mfrb_template_init() {
 	// activity
 	elgg_unregister_page_handler('activity');
 	elgg_register_page_handler('activity', 'activity_page_handler');
+	elgg_register_page_handler('message', 'message_page_handler');
 	// register avatar handler
 	elgg_register_page_handler('avatar', 'avatar_handler');
 

@@ -43,6 +43,8 @@ switch ($page_type) {
 		$options['relationship_guid'] = $user->getGUID();
 		$options['relationship'] = 'friend';
 		break;
+	case 'view':
+		$options['object_guid'] = get_input('object_guid');
 	default:
 		$page_filter = 'all';
 		break;

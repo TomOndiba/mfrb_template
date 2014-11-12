@@ -30,6 +30,9 @@ $french = array(
 	/**
 	 * Notifications
 	 */
+	'thewire:message:user' => "Messages de %s",
+	'thewire:message:group' => "dans le groupe %s",
+	'thewire:by' => "Message de %s",
 	'thewire:notify:summary' => 'New wire post: %s',
 	'thewire:notify:subject' => "%s vous a notifié",
 	'thewire:notify:reply' => '%s responded to %s on the wire:',
