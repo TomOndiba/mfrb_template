@@ -120,11 +120,7 @@ elgg.river.init = function() {
 			data: $.param(elgg.security.addToken($(this).parent().find('textarea, input').serializeObject())),
 			success: function(response) {
 				if(response.status > -1) {
-					var $efcr = $('.item-river-'+ response.output.container_guid +' .elgg-form-comment-river'), // elgg-form-comment-river
-						comm = elgg.handlebars('river-comment-item-template')(elgg.river.format_river(response.output));
-
-					$efcr.addClass('hidden').parent().find('.elgg-river-comments').removeClass('hidden').append(comm);
-					$efcr.find('.elgg-input-plaintext').val('');
+					elgg.river.append_comment(response.output);
 				}
 			},
 			error: function() {
@@ -190,7 +186,6 @@ elgg.register_hook_handler('history', 'submit', elgg.river.submit);
 /**
  * Add a river item in river feed. This river item is submited by user, or sended by nodejs.
  * @param  {array}  elem   json of river item
- * @return {[type]} [description]
  */
 elgg.river.prepend_river = function(elem) {
 	var elem = elgg.river.format_river(elem),
@@ -204,15 +199,9 @@ elgg.river.prepend_river = function(elem) {
 	if ($('.elgg-group-'+elem.target_guid).length) $rivers.push($('.elgg-group-'+elem.target_guid+' .elgg-list-river'));
 
 	$.each($rivers, function() {
-		if ($(this).is(":visible")) {
-			$(this).prepend(
-				$(elgg.handlebars('river-item-template')(elem)).data(elem).effect('highlight', {}, 1000)
-			);
-		} else {
-			$(this).prepend(
-				$(elgg.handlebars('river-item-template')(elem)).data(elem)
-			);
-		}
+		$(this).prepend(
+			$(elgg.handlebars('river-item-template')(elem)).data(elem).river_highlight()
+		);
 	});
 	/*$('.elgg-list-river[data-page_type="mine"], .elgg-list-river[data-page_type="all"]').not('[load-river]')
 	.add('.elgg-group-'+elem.target_guid+' .elgg-list-river')
@@ -224,16 +213,46 @@ elgg.river.prepend_river = function(elem) {
 
 
 /**
+ * Add comment in river feed. This comment is submited by user or sended by nodejs.
+ * @param  {[type]} comment comment in json format
+ */
+elgg.river.append_comment = function(comment) {
+	var $efcr = $('.item-river-'+ comment.container_guid +' .elgg-form-comment-river'), // elgg-form-comment-river
+		comm = elgg.handlebars('river-comment-item-template')(elgg.river.format_river(comment));
+
+	$.each($efcr, function() {
+		$(this).addClass('hidden').parent().find('.elgg-river-comments')
+			.removeClass('hidden').append($(comm).river_highlight());
+	});
+	$efcr.find('.elgg-input-plaintext').val('');
+};
+
+
+
+elgg.provide('elgg.river.nodejs');
+/**
  * nodejs handler for new messages
  */
-elgg.provide('elgg.river.nodejs');
 elgg.river.nodejs.new_wire = function(hook, type, params, value) {
-	if (params.message.subject_guid != elgg.get_logged_in_user_guid()) {
+	if (params.message.subject_guid != elgg.get_logged_in_user_guid() || !elgg.visibility.active) {
 		elgg.river.prepend_river(params.message);
 	}
 	return value;
 };
 elgg.register_hook_handler('nodejs', 'message:new_wire', elgg.river.nodejs.new_wire);
+
+
+
+/**
+ * nodejs handler for new comment
+ */
+elgg.river.nodejs.new_comment = function(hook, type, params, value) {
+	if (params.message.subject.guid != elgg.get_logged_in_user_guid() || !elgg.visibility.active) {
+		elgg.river.append_comment(params.message);
+	}
+	return value;
+};
+elgg.register_hook_handler('nodejs', 'message:new_comment', elgg.river.nodejs.new_comment);
 
 
 
@@ -382,7 +401,7 @@ elgg.river.loadOnScroll = function() {
 			var river = $('.elgg-layout:not(.hidden) .elgg-list-river:not(.hidden)'),
 				loader = river.find('.elgg-ajax-loader');
 
-			if (!loader.hasClass('end') && loader.hasClass('hidden')) {
+			if (!loader.hasClass('end') && loader.hasClass('hidden') && !river.hasClass('single-view')) {
 				loader.removeClass('hidden');
 				elgg.river.load_river({
 					posted: river.children('.elgg-river-item').last().data().posted
@@ -582,6 +601,11 @@ elgg.river.scrapWebpage = function(url, options) {
 /**
  * Tools
  */
+$.fn.river_highlight = function() {
+	$(this).effect('highlight', {}, 1000);
+	return this;
+}
+
 
 
 String.prototype.ParseURL = function(reduce, videopopup) {

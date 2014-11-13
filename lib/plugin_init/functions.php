@@ -42,7 +42,11 @@ function mfrb_execute_js($code = null, $count = false) {
 }
 
 
-
+/**
+ * Return wire object
+ * @param  [object]   $item  river item
+ * @return [object]          the river item with more data
+ */
 function get_wire_object($item) {
 	$object = $item->toObject();
 
@@ -101,7 +105,7 @@ function get_wire_object($item) {
 		'inverse_relationship' => true,
 		'count' => true
 	));
-	$item->liked = check_entity_relationship(elgg_get_logged_in_user_guid(), 'like', $object->getGUID()) ? true : false;
+	$item->liked = check_entity_relationship(elgg_get_logged_in_user_guid(), 'like', $object->getGUID()) ? 1 : 0;
 
 	$likers = elgg_get_entities_from_relationship(array(
 		'relationship' => 'like',
@@ -128,7 +132,11 @@ function get_wire_object($item) {
 }
 
 
-
+/**
+ * Return comment object
+ * @param  [object]   $comment   ElggComment Object
+ * @return [object]              Return comment with more data
+ */
 function get_comment_river($comment) {
 	// likes
 	$comment_likes = elgg_get_entities_from_relationship(array(
@@ -137,7 +145,7 @@ function get_comment_river($comment) {
 		'inverse_relationship' => true,
 		'count' => true
 	));
-	$comment_liked = check_entity_relationship(elgg_get_logged_in_user_guid(), 'like', $comment->getGUID()) ? true : false;
+	$comment_liked = check_entity_relationship(elgg_get_logged_in_user_guid(), 'like', $comment->getGUID()) ? 1 : 0;
 
 	$likers = elgg_get_entities_from_relationship(array(
 		'relationship' => 'like',

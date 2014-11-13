@@ -86,8 +86,12 @@ if ($comment_guid) {
 		'target_guid' => $entity_guid,
 	));
 
-	if (elgg_is_xhr()) {
+	elgg_nodejs_broadcast(array(
+		'type'=> 'new_comment',
+		'message' => get_comment_river($comment)
+	));
 
+	if (elgg_is_xhr()) {
 		echo json_encode(get_comment_river($comment));
 	} else {
 		system_message(elgg_echo('generic_comment:posted'));

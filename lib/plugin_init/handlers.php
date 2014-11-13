@@ -41,6 +41,49 @@ function activity_page_handler($page) {
 
 
 /**
+ * Message page handler
+ *
+ * Supports:
+ * message/owner/<username>     View this user's wire posts
+ * message/view/<guid>          View a post
+ * thewire/tag/<tag>            View wire posts tagged with <tag>
+ *
+ * @param array $page From the page_handler function
+ * @return bool
+ */
+function message_page_handler($page) {
+
+	$base_dir = elgg_get_plugins_path() . PLUGIN_ID . '/pages/thewire';
+
+	if (!isset($page[0]) || $page[0] == 'all') {
+		forward('activity');
+	}
+
+	switch ($page[0]) {
+		case "owner":
+			include "$base_dir/owner.php";
+			break;
+		case "view":
+			if (isset($page[1])) {
+				set_input('guid', $page[1]);
+			}
+			include "$base_dir/view.php";
+			break;
+		case "tag":
+			if (isset($page[1])) {
+				set_input('tag', $page[1]);
+			}
+			include "$base_dir/tag.php";
+			break;
+		default:
+			return false;
+	}
+	return true;
+}
+
+
+
+/**
  * Provide handler to edit and view return avatar for user and group
  * URLs take the form of
  *
