@@ -68,14 +68,27 @@
 		</div>
 		<div class="elgg-body">
 			<div class="elgg-river-summary">
-				<a href="{{subject.url}}" class="elgg-river-subject">{{subject.name}}</a>&nbsp;{{{summary}}}
-				<a href="<?php echo $site_url; ?>message/view/{{object_guid}}">
-					<span class="elgg-friendlytime">
+				<a href="{{subject.url}}" class="elgg-river-subject float">{{subject.name}}</a>&nbsp;{{{summary}}}
+				<a href="<?php echo $site_url; ?>message/view/{{object_guid}}" class="clearfloat float">
+					<span class="elgg-friendlytime pbm">
 						<time title="%pm %28 %b %2014 à %CEST" datetime="{{posted}}" time="{{posted}}">{{friendlytime}}</time>
 					</span>
 				</a>
+				<span class="fi-menu elgg-menu-submenu t250"></span>
+				<ul class="elgg-submenu">
+					<li>
+						<ul class="elgg-menu elgg-menu-hover-actions">
+							<li class="elgg-menu-item-thewire-edit">
+								<a href="<?php echo $site_url; ?>action/thewire/edit/{{subject.username}}" class="elgg-menu-content"><?php echo elgg_echo('thewire:action:edit'); ?></a>
+							</li>
+							<li class="elgg-menu-item-thewire-delete">
+								<a href="<?php echo $site_url; ?>action/thewire/delete?guid={{object_guid}}" class="elgg-menu-content elgg-requires-confirmation"><?php echo elgg_echo('thewire:action:delete'); ?></a>
+							</li>
+						</ul>
+					</li>
+				</ul>
 			</div>
-			<div class="elgg-river-message">{{{message}}}</div>
+			<div class="elgg-river-message clearfloat">{{{message}}}</div>
 			{{#if attachment}}
 			<a class="elgg-river-linkbox clearfix" target="_blank" href="{{attachment.link_url}}">
 				<div class="elgg-river-image">

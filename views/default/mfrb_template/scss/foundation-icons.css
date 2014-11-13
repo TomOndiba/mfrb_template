@@ -1,6 +1,7 @@
 .mfrb-icon:before,
 .mfrb-icon:after,
 
+.fi-menu,
 .fi-address-book:before,
 .fi-alert:before,
 .fi-align-center:before,
@@ -296,6 +297,7 @@
   text-decoration: inherit;
 }
 
+.fi-menu:before { content: "\f221"; }
 .fi-address-book:before { content: "\f100"; }
 .fi-alert:before { content: "\f101"; }
 .fi-align-center:before { content: "\f102"; }

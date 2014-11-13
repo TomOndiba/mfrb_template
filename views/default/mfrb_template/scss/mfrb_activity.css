@@ -171,6 +171,57 @@ div.elgg-menu-item-comment a:hover {
 .elgg-river-comments.hidden + .elgg-form-comment-river.hidden + div.elgg-menu-item-comment {
 	display: none;
 }
+.elgg-river-item {
+	position: relative;
+}
+.elgg-river-item .elgg-menu-submenu {
+	color: #DEDEDE;
+	cursor: pointer;
+	position: absolute;
+	right: 0;
+	top: 30px;
+	font-size: 1.7em;
+	width: 28px;
+	text-align: center;
+	height: 28px;
+	border-radius: 3px;
+	border: 1px solid transparent;
+}
+.elgg-river-item:hover .elgg-menu-submenu {
+	color: #999;
+}
+.elgg-river-item .elgg-menu-submenu:hover {
+	border: 1px solid #F1C40F;
+}
+.elgg-submenu {
+	display: none;
+	position: absolute;
+	z-index: 10000;
+	overflow: hidden;
+	min-width: 180px;
+	max-width: 250px;
+	border: 1px solid #DEDEDE;
+	background-color: #FFF;
+
+	border-radius: 0 3px 3px 3px;
+	box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.25);
+}
+.elgg-submenu > li {
+	border-bottom: 1px solid #ddd;
+}
+.elgg-submenu > li:last-child {
+	border-bottom: none;
+}
+.elgg-submenu .elgg-heading-basic {
+	display: block;
+}
+.elgg-submenu > li a {
+	padding: 6px 18px;
+}
+.elgg-submenu a:hover {
+	background-color: #F0F0F0;
+	text-decoration: none;
+}
 
 
 /*

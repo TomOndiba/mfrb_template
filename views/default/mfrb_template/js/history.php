@@ -487,7 +487,7 @@ elgg.history.display_page = function display_page(name, type, params, value) {
 
 		// Store actual page if it's storable
 		elgg.history.store_page(elgg.history.data.referer);
-	console.log($('title').html(), 'TtTtTtT');
+
 		// Set title of the page
 		$('title').html(params.title);
 
@@ -496,6 +496,7 @@ elgg.history.display_page = function display_page(name, type, params, value) {
 
 		// Clean some stuffs
 		$('.elgg-menu-hover, .tipsy, .elgg-popup:not(.pinned)').remove();
+		$('.elgg-submenu').fadeOut();
 
 		// Display page
 		$epb.append($respBody.fadeIn());

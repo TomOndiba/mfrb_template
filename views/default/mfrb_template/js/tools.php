@@ -125,3 +125,57 @@ elgg.friendly_time.init = function() {
 	setInterval(elgg.friendly_time.update, 1000*60); // each 60 sec
 };
 elgg.register_hook_handler('init', 'system', elgg.friendly_time.init);
+
+
+
+/**
+ * Initialize the submenu
+ *
+ * @param {Object} parent
+ * @return void
+ */
+elgg.ui.initMenu = function(parent) {
+	if (!parent) {
+		parent = document;
+	}
+
+	// submenu menu
+	$('body').on('click', '.elgg-menu-submenu', function(e) {
+		var $this = $(this),
+			$submenu = $this.data('submenu') || null;
+
+		// check if we've attached the menu to this element already
+		if (!$submenu) {
+			$submenu = $this.next('.elgg-submenu');
+			$this.data('submenu', $submenu);
+		}
+
+		// close submenu if arrow is clicked & menu already open
+		if ($submenu.css('display') == 'block') {
+			$submenu.fadeOut();
+		} else {
+			// @todo Use jQuery-ui position library instead -- much simpler
+			var offset = $this.offset();
+			var top = $this.height() + offset.top + 'px';
+			var left = $this.width() + offset.left - $submenu.width() + 'px';
+
+			$submenu.appendTo('body')
+					.css('position', 'absolute')
+					.css('top', top)
+					.css('left', left)
+					.fadeIn('normal');
+		}
+
+		// hide any other open hover menus
+		$('.elgg-menu-hover:visible').not($submenu).fadeOut();
+		return false;
+	});
+
+	// hide submenu when user clicks elsewhere
+	$('body').on('click', function(event) {
+		if ($(event.target).parents('.elgg-submenu').length === 0) {
+			$('.elgg-submenu').fadeOut();
+		}
+	});
+};
+elgg.register_hook_handler('init', 'system', elgg.ui.initMenu);

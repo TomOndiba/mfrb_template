@@ -26,12 +26,15 @@ $french = array(
 	 * The wire river
 	 */
 	'river:create:object:thewire' => "dans %s",
+	'thewire:action:edit' => "Modifier mon message",
+	'thewire:action:delete' => "Supprimer mon message",
+	'thewire:message:user' => "Messages de %s",
+	'thewire:message:group' => "dans le groupe %s",
 
 	/**
 	 * Notifications
 	 */
-	'thewire:message:user' => "Messages de %s",
-	'thewire:message:group' => "dans le groupe %s",
+	'thewire:deleted' => "Votre message est supprimé !",
 	'thewire:by' => "Message de %s",
 	'thewire:notify:summary' => 'New wire post: %s',
 	'thewire:notify:subject' => "%s vous a notifié",
