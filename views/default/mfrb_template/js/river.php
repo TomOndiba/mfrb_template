@@ -121,6 +121,7 @@ elgg.river.init = function() {
 			success: function(response) {
 				if(response.status > -1) {
 					elgg.river.append_comment(response.output);
+					$('.item-river-'+ response.output.container_guid +' .elgg-form-comment-river').addClass('hidden').find('.elgg-input-plaintext').val('');
 				}
 			},
 			error: function() {
@@ -221,10 +222,9 @@ elgg.river.append_comment = function(comment) {
 		comm = elgg.handlebars('river-comment-item-template')(elgg.river.format_river(comment));
 
 	$.each($efcr, function() {
-		$(this).addClass('hidden').parent().find('.elgg-river-comments')
+		$(this).parent().find('.elgg-river-comments')
 			.removeClass('hidden').append($(comm).river_highlight());
 	});
-	$efcr.find('.elgg-input-plaintext').val('');
 };
 
 
