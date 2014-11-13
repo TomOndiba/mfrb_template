@@ -201,11 +201,6 @@ elgg.history.init = function() {
 	});
 
 	// Register hook handler for some actions.
-	elgg.history.register_direct_action('river/delete', {
-		success: function(json) {
-			elgg.history.data.$this.closest('.elgg-item').css('background-color', '#FF7777').fadeOut();
-		}
-	});
 	elgg.history.register_direct_action('ccomments/delete', {
 		success: function(json) {
 			var parsedUrl = elgg.parse_url(elgg.history.data.url);

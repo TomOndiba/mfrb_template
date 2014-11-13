@@ -74,19 +74,23 @@
 						<time title="%pm %28 %b %2014 à %CEST" datetime="{{posted}}" time="{{posted}}">{{friendlytime}}</time>
 					</span>
 				</a>
+				{{#if actions.edit}}
+				<span class="elgg-icon elgg-icon-delete link float-alt hidden"></span>
+				<a href="<?php echo $site_url; ?>action/thewire/edit?guid={{object_guid}}" class="elgg-button elgg-button-submit float-alt hidden" data-object_guid="{{object_guid}}"><?php echo elgg_echo('edit'); ?></a>
 				<span class="fi-menu elgg-menu-submenu t250"></span>
 				<ul class="elgg-submenu">
 					<li>
 						<ul class="elgg-menu elgg-menu-hover-actions">
 							<li class="elgg-menu-item-thewire-edit">
-								<a href="<?php echo $site_url; ?>action/thewire/edit/{{subject.username}}" class="elgg-menu-content"><?php echo elgg_echo('thewire:action:edit'); ?></a>
+								<a href="#" class="elgg-menu-content" data-object_guid="{{object_guid}}"><?php echo elgg_echo('thewire:action:edit'); ?></a>
 							</li>
 							<li class="elgg-menu-item-thewire-delete">
-								<a href="<?php echo $site_url; ?>action/thewire/delete?guid={{object_guid}}" class="elgg-menu-content elgg-requires-confirmation"><?php echo elgg_echo('thewire:action:delete'); ?></a>
+								<a href="<?php echo $site_url; ?>action/thewire/delete?guid={{object_guid}}" class="elgg-menu-content elgg-requires-confirmation" data-object_guid="{{object_guid}}"><?php echo elgg_echo('thewire:action:delete'); ?></a>
 							</li>
 						</ul>
 					</li>
 				</ul>
+				{{/if}}
 			</div>
 			<div class="elgg-river-message clearfloat">{{{message}}}</div>
 			{{#if attachment}}

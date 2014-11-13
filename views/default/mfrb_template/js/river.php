@@ -133,6 +133,21 @@ elgg.river.init = function() {
 	.on('click', '.elgg-form-comment-river .elgg-icon-delete', function() {
 		$(this).closest('.elgg-river-item')
 			.find('.elgg-form-comment-river').addClass('hidden');
+	})
+	.on('click', '.elgg-menu-item-thewire-edit a', function() {
+		var $eri = $('.elgg-layout:not(.hidden) .elgg-list-river:not(.hidden) .item-river-'+$(this).data('object_guid')),
+			$erm = $eri.find('.elgg-river-message');
+
+		$eri.find('.elgg-button-submit, .elgg-icon-delete').removeClass('hidden');
+		$erm.attr('contenteditable','true').focus();
+		$('.elgg-submenu').fadeOut();
+	})
+	.on('click', '.elgg-river-summary .elgg-icon-delete', function() {
+		var $eri = $(this).closest('.elgg-river-item'),
+			$erm = $eri.find('.elgg-river-message');
+
+		$eri.find('.elgg-button-submit, .elgg-icon-delete').addClass('hidden');
+		$erm.removeAttr('contenteditable');
 	});
 
 	// Load on bottom scroll
@@ -257,6 +272,19 @@ elgg.register_hook_handler('nodejs', 'message:new_comment', elgg.river.nodejs.ne
 
 
 /**
+ * nodejs handler for new comment
+ */
+elgg.river.nodejs.edit_wire = function(hook, type, params, value) {
+	if (params.message.subject.guid != elgg.get_logged_in_user_guid() || !elgg.visibility.active) {
+		$('.item-river-'+params.message.object_guid).find('.elgg-river-message').html(params.message.message).river_highlight();
+	}
+	return value;
+};
+elgg.register_hook_handler('nodejs', 'message:edit_wire', elgg.river.nodejs.edit_wire);
+
+
+
+/**
  * Format json river item to complete or rearrange some stuffs
  * @param  {json} elem    a river element in json format
  * @return {json}         json
@@ -267,7 +295,8 @@ elgg.river.format_river = function(elem) {
 	elem.actions = {
 		like: elgg.security.addToken(elgg.get_site_url()+'action/like?guid='+elem.object_guid),
 		unlike: elgg.security.addToken(elgg.get_site_url()+'action/unlike?guid='+elem.object_guid),
-		reply: true
+		reply: true,
+		edit: elem.subject_guid == elgg.get_logged_in_user_guid() ? true : false
 	};
 	elem.likes = parseInt(elem.likes);
 	elem.liked = parseInt(elem.liked);
@@ -439,6 +468,31 @@ elgg.history.register_direct_action('unlike\\?guid=', {
 			if (json.output.likes == 0) item.find('.elgg-river-likes').addClass('hidden');
 			item.find('.elgg-river-likes').html(elgg.river.format_likers(json.output));
 		}
+	}
+});
+
+
+
+/**
+ * Delete and edit actions
+ */
+elgg.history.register_direct_action('thewire/delete', {
+	success: function(json) {
+		$('.item-river-'+elgg.history.data.$this.data('object_guid')).css('background-color', '#FF7777').fadeOut();
+		$('.elgg-submenu').fadeOut();
+	}
+});
+elgg.history.register_direct_action('thewire/edit', {
+	data: {
+		body: function() {
+			return elgg.history.data.$this.closest('.elgg-river-item').find('.elgg-river-message').html()
+		}
+	},
+	success: function(json) {
+		var $eri = $('.item-river-'+elgg.history.data.$this.data('object_guid'));
+
+		$eri.find('.elgg-button-submit, .elgg-icon-delete').addClass('hidden');
+		$eri.find('.elgg-river-message').removeAttr('contenteditable').river_highlight();
 	}
 });
 

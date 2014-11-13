@@ -44,6 +44,7 @@ function mfrb_template_init() {
 	elgg_register_action('comment/save', "$action_path/comment/save.php");
 	elgg_register_action('thewire/add', "$action_path/thewire/add.php");
 	elgg_register_action('thewire/delete', "$action_path/thewire/delete.php");
+	elgg_register_action('thewire/edit', "$action_path/thewire/edit.php");
 	elgg_register_action('like', "$action_path/likes/add.php");
 	elgg_register_action('unlike', "$action_path/likes/delete.php");
 
