@@ -223,6 +223,19 @@ div.elgg-menu-item-comment a:hover {
 	text-decoration: none;
 }
 
+.elgg-river-message[contenteditable] {
+	background: rgba(255, 247, 60, 0.3);
+}
+.elgg-river-summary .elgg-button-submit {
+	position: absolute;
+	right: 35px;
+	top: 31px;
+}
+.elgg-river-summary .elgg-icon-delete {
+	position: absolute;
+	right: 115px;
+	top: 34px;
+}
 
 /*
  * LINKBOX
