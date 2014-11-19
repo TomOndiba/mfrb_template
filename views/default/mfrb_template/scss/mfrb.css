@@ -555,40 +555,6 @@ html {
 	margin: 0;
 }
 
-.footable.breakpoint>tbody>tr>td>span.footable-toggle, .footable>thead>tr>th>span.footable-sort-indicator {
-	font-family: "foundation-icons";
-}
-.footable.breakpoint.toggle-arrow>tbody>tr>td>span.footable-toggle:before {
-	content: "\f199";
-	color: #DEDEDE;
-}
-.footable.breakpoint.toggle-arrow>tbody>tr.footable-detail-show>td>span.footable-toggle:before {
-	content: "\f176";
-	color: #C0392B;
-}
-.footable-row-detail {
-	display: table-row;
-	font-size: 0.8em;
-	opacity: 0.8;
-}
-.elgg-table-alt tr.footable-row-detail:hover {
-	background: none;
-}
-span.footable-sort-indicator {
-	font-size: 20px;
-	color: #999;
-	margin-top: -4px;
-	height: 1px;
-	vertical-align: top;
-}
-.footable>thead>tr>th>span.footable-sort-indicator:before {
-	content: "\f21b";
-}
-.footable>thead>tr>th.footable-sorted>span.footable-sort-indicator:before {
-	content: "\f21c";
-}
-.footable>thead>tr>th.footable-sorted-desc>span.footable-sort-indicator:before {
-	content: "\f21d";
-}
+
 
 

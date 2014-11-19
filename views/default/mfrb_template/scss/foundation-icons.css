@@ -298,6 +298,8 @@
 }
 
 .fi-menu:before { content: "\f221"; }
+.fi-world:before { content: "\f222"; }
+.fi-menu:before { content: "\f221"; }
 .fi-address-book:before { content: "\f100"; }
 .fi-alert:before { content: "\f101"; }
 .fi-align-center:before { content: "\f102"; }
