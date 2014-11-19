@@ -177,6 +177,27 @@ function get_comment_river($comment) {
 
 
 /**
+ * Count how many people have liked an entity.
+ *
+ * @param  ElggEntity $entity
+ *
+ * @return int Number of likes
+ */
+function likes_count($entity) {
+	$type = $entity->getType();
+	$params = array('entity' => $entity);
+	$number = elgg_trigger_plugin_hook('likes:count', $type, $params, false);
+
+	if ($number) {
+		return $number;
+	} else {
+		return $entity->countAnnotations('likes');
+	}
+}
+
+
+
+/**
  * Web service for read latest wire post of user
  *
  * @param string $username username of author

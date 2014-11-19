@@ -353,15 +353,13 @@ elgg.history.get_page = function get_page(params) {
 		data: elgg.history.data.dataForm,
 		dataType: 'json',
 		complete: function(response) {
-			if (response.responseJSON.forward_url && response.responseJSON.status >= 0) {
+			if (!elgg.isUndefined(response.responseJSON) && response.responseJSON.forward_url && response.responseJSON.status >= 0) {
 
 			} else {
 				elgg.history.progressBar('stop');
 			}
 		},
 		success: function(response) {
-			console.log('succ!!');
-
 			// Plugin can hook at this point to perform some action
 			if (!elgg.trigger_hook('history', 'success', response, true)) return false;
 
