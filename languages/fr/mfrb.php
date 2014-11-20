@@ -37,7 +37,13 @@ $french = array(
 	'thewire:deleted' => "Votre message est supprimé !",
 	'thewire:by' => "Message de %s",
 	'thewire:notify:summary' => 'New wire post: %s',
-	'thewire:notify:subject' => "%s vous a notifié",
+	'thewire:notify:subject' => "%s vous a notifié pour une discussion",
+	'thewire:notify:body' => "<a href=\"%s\" target=\"_blank\">%s</a> vous a notifié pour <a href=\"%s\" target=\"_blank\">cette discussion</a> :
+
+<div style=\"background-color: #FAFAFA;font-size: 1.1em;padding: 10px;\">%s</div>
+
+Pour répondre ou voir le contenu de référence, suivez le lien ci-dessous:
+%s",
 	'thewire:notify:reply' => '%s responded to %s on the wire:',
 	'thewire:notify:post' => '%s posted on the wire:',
 	'thewire:notify:footer' => "View and reply:\n%s",

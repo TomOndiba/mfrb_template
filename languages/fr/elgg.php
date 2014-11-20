@@ -1124,8 +1124,8 @@ Si vous avez demandé ce changement veuillez cliquer sur le lien ci-dessous, sin
 	'generic_comment:none' => "Pas de commentaire",
 	'generic_comment:title' => "Commentaire par %s",
 
-	'generic_comment:email:subject' => "Nouveau commentaire sur « %s »",
-	'generic_comment:email:body' => "<a href=\"%s\" target=\"_blank\">%s</a> a commenté <a href=\"%s\" target=\"_blank\">%s</a> :
+	'generic_comment:email:subject' => "Nouveau commentaire sur %s",
+	'generic_comment:email:body' => "<a href=\"%s\" target=\"_blank\">%s</a> a commenté <a href=\"%s\" target=\"_blank\">cette discussion</a> :
 
 <div style=\"background-color: #FAFAFA;font-size: 1.1em;padding: 10px;\">%s</div>
 
