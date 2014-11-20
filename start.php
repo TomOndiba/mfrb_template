@@ -109,6 +109,8 @@ function mfrb_template_init() {
 	// Hook for thewire river menu
 	elgg_unregister_plugin_hook_handler('register', 'menu:river', 'likes_river_menu_setup');
 	elgg_register_plugin_hook_handler('register', 'menu:river', 'mfrb_likes_river_menu_setup', 400);
+	// Register a URL handler for thewire posts
+	elgg_register_plugin_hook_handler('entity:url', 'object', 'thewire_set_url');
 
 	// Hook for page_owner
 	// ????? elgg_unregister_plugin_hook_handler('page_owner', 'system', 'default_page_owner_handler');

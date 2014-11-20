@@ -145,3 +145,21 @@ function gravatar_avatar_hook($hook, $type, $url, $params) {
 	}
 }
 
+
+
+/**
+ * Override the url for a wire post to return the thread
+ *
+ * @param string $hook
+ * @param string $type
+ * @param string $url
+ * @param array  $params
+ * @return string
+ */
+function thewire_set_url($hook, $type, $url, $params) {
+	$entity = $params['entity'];
+	if (elgg_instanceof($entity, 'object', 'thewire')) {
+		return "message/view/" . $entity->guid;
+	}
+}
+

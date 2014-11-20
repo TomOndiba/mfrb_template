@@ -74,16 +74,16 @@ if ($guid) {
 
 	$notified_users = get_input('notified_users', false);
 	if ($notified_users) {
-		$user = elgg_get_logged_in_user_entity();
+		$logged_in_user = elgg_get_logged_in_user_entity();
 		$notified_users = explode(',', $notified_users);
 		foreach ($notified_users as $user) {
 		}
 		notify_user($notified_users,
 			$post->owner_guid,
-			elgg_echo('thewire:notify:subject', array($user->name)),
+			elgg_echo('thewire:notify:subject', array($logged_in_user->name)),
 			elgg_echo('thewire:notify:body', array(
-				$user->getURL(),
-				$user->name,
+				$logged_in_user->getURL(),
+				$logged_in_user->name,
 				$post->getURL(),
 				$post->description,
 				$post->getURL()
