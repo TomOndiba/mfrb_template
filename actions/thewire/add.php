@@ -78,11 +78,10 @@ if ($guid) {
 		$notified_users = explode(',', $notified_users);
 		foreach ($notified_users as $user) {
 		}
-		$subject = elgg_echo('thewire:notify:subject', array($user->name));
 		notify_user($notified_users,
 			$post->owner_guid,
-			$subject,
-			elgg_echo('generic_comment:email:body', array(
+			elgg_echo('thewire:notify:subject', array($user->name)),
+			elgg_echo('thewire:notify:body', array(
 				$user->getURL(),
 				$user->name,
 				$post->getURL(),
