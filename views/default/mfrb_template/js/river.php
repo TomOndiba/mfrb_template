@@ -7,18 +7,23 @@ elgg.river.init = function() {
 	/*
 	 * Textarea
 	 */
-	$('body').on('keyup', '.thewire-textarea', function() {
-		var expression = /https?:\/\/[-a-zA-Z0-9_.~]{1,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+,.~#?&//=]*)?/gi,
-			regex = new RegExp(expression),
-			urls = $(this).val().match(regex);
+	$('body').on({
+		keyup: function() {
+			var expression = /https?:\/\/[-a-zA-Z0-9_.~]{1,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+,.~#?&//=]*)?/gi,
+				regex = new RegExp(expression),
+				urls = $(this).val().match(regex);
 
-		// scrap first url
-		// We check before if there is network which need scrapping with data-scrap
-		if (urls && linkParsed != urls[0]) {
-			linkParsed = urls[0];
-			elgg.river.scrapToLinkBox($(this).closest('form').find('.linkbox'), linkParsed);
+			// scrap first url
+			// We check before if there is network which need scrapping with data-scrap
+			if (urls && linkParsed != urls[0]) {
+				linkParsed = urls[0];
+				elgg.river.scrapToLinkBox($(this).closest('form').find('.linkbox'), linkParsed);
+			}
+		},
+		focus: function() {
+			$(this).parent().find('.thewire-extra.hidden').slideDown('medium');
 		}
-	});
+	}, '.thewire-textarea');
 
 	/*
 	 * Linkbox

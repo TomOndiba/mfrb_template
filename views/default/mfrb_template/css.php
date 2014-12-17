@@ -23,6 +23,7 @@ readfile(__DIR__ . '/scss/select2.css');
 ob_start();
 include_once('scss/vars.php');
 include_once('scss/helpers.php');
+include_once('scss/dropzone.php');
 $ob = ob_get_clean();
 
 $files = $ob . file_get_contents(__DIR__ . '/scss/test.scss');

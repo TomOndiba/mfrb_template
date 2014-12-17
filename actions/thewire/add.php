@@ -6,6 +6,8 @@
 
 // don't filter since we strip and filter escapes some characters
 $body = get_input('body', '', false);
+$notified_users = get_input('notified_users', false);
+$files = get_input('upload_guids', false);
 
 $method = 'site';
 
@@ -55,6 +57,17 @@ if ($guid) {
 		'target_guid' => $post->container_guid
 	));
 
+	if ($files) {
+		foreach ($files as $file_guid) {
+			add_entity_relationship($file_guid, 'file_attachment', $guid);
+			$file = get_entity($file_guid);
+			$file->read_access = ACCESS_PUBLIC;
+			$file->access_id = ACCESS_PUBLIC;
+			$file->deleteMetadata('not_attached');
+			$file->save();
+		}
+	}
+
 	// let other plugins know we are setting a user status
 	$params = array(
 		'entity' => $post,
@@ -72,11 +85,11 @@ if ($guid) {
 		'message' => get_wire_object($item)
 	));
 
-	$notified_users = get_input('notified_users', false);
 	if ($notified_users) {
 		$logged_in_user = elgg_get_logged_in_user_entity();
 		$notified_users = explode(',', $notified_users);
 		foreach ($notified_users as $user) {
+			add_entity_relationship($user, 'mention', $guid);
 		}
 		notify_user($notified_users,
 			$post->owner_guid,

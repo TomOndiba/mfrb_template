@@ -30,6 +30,8 @@ $french = array(
 	'thewire:action:delete' => "Supprimer mon message",
 	'thewire:message:user' => "Messages de %s",
 	'thewire:message:group' => "dans le groupe %s",
+	'thwire:message:add_file' => "Joindre un fichier",
+	'thewire:mention:to' => "à",
 
 	/**
 	 * Notifications
@@ -47,6 +49,26 @@ Pour répondre ou voir le contenu de référence, suivez le lien ci-dessous:
 	'thewire:notify:reply' => '%s responded to %s on the wire:',
 	'thewire:notify:post' => '%s posted on the wire:',
 	'thewire:notify:footer' => "View and reply:\n%s",
+
+	// dropzone
+	'dropzone:response_error' => "Une erreur inconnue s'est produite.",
+	'dropzone:default_message' => "<strong>Glissez votre fichier ici</strong><br /><span>ou cliquez pour le sélectionner sur votre ordinateur</span>",
+	'dropzone:remove_file' => "Supprimer",
+	'dropzone:max_files_exceeded' => "Vous ne pouvez pas télécharger plus de fichiers en une seule fois.",
+	'dropzone:fallback_message' => "Votre navigateur ne supporte pas le téléchargement par glisser-déposer.",
+	'dropzone:fallback_text' => 'Please use the file input to upload your files the old way',
+	'dropzone:invalid_filetype' => "Les fichiers de ce type ne sont pas autorisés.",
+	'dropzone:file_too_big' => "Le fichier est trop gros.",
+	'dropzone:cancel_upload' => "Annuler le téléchargement.",
+	'dropzone:cancel_upload_confirmation' => "Êtes-vous sûr d'annuler le téléchargement ?",
+	'dropzone:server_side_error' => "Erreur du serveur.",
+	'dropzone:file_not_entity' => "Le fichier ne peut pas être créé.",
+
+	// Upload errors
+	'upload:success' => "Le fichier a bien été téléchargé.",
+	'upload:error:no_file' => 'File input was mepty',
+	'upload:error:file_size' => "La taille du fichier dépasse la taille maximum autorisée.",
+	'upload:error:unknown' => "Une erreur inconnue s'est produite.",
 
 );
 

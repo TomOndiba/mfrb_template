@@ -8,7 +8,6 @@ elgg.provide('elgg.mfrb_template');
 elgg.provide('mfrb');
 
 
-
 /*
  * Init. Loaded for the first time only
  */
@@ -35,6 +34,19 @@ elgg.mfrb_template.init = function() {
 		$('.elgg-sidebar-alt').animate({marginLeft: sbMargin}, sbSpeed);
 
 		$(this).toggleClass('fi-arrow-right fi-arrow-left');
+	});
+
+	// toggle dropzone
+	$('body').on('click', '.toggle-dropzone', function() {
+		var $this = $(this);
+		$this.css('cursor', 'progress');
+		require(['elgg_dropzone'], function(dz) {
+			dz.init();
+			$this.css('cursor', 'auto');
+			$this.closest('.elgg-form').find('.filesbox').slideToggle('medium');
+		}, function (err) {
+			$this.css('cursor', 'auto');
+		});
 	});
 
 	// bind resize window
@@ -242,6 +254,27 @@ elgg.history.register_storable_page('adherents/statistics', {
 		elem.fadeIn().removeClass('hidden');
 	}
 });
+
+
+
+/**
+ * Fill title input with name of the file when file is uploaded with dropzone.
+ */
+mfrb.dropzoneUpload = function(name, type, params, value) {
+	if (params.data && params.data.output) {
+		var $twe = $(params.file.previewElement).closest('.thewire-extra');
+		if ($twe.length) {
+			// hide elgg-dropzone instructions if maxFiles is reached
+			if (params.dropzone.files.length >= params.dropzone.options.maxFiles) {
+				$twe.find('.elgg-dropzone-instructions').animate({height: 0, padding: 0, opacity: 0}, function() {
+					$(this).hide();
+					$twe.find('.elgg-input-dropzone .elgg-dropzone-preview').first().css('border', 0);
+				});
+			}
+		}
+	}
+};
+elgg.register_hook_handler('upload:success', 'dropzone', mfrb.dropzoneUpload);
 
 
 

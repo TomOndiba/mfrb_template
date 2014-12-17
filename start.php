@@ -38,15 +38,29 @@ function mfrb_template_init() {
 	$root = dirname(__FILE__);
 	$http_base = '/mod/' . PLUGIN_ID;
 
-	// actions
-	$action_path = "$root/actions";
+	/**
+	 * Register library
+	 */
+	elgg_register_library('dropzone:upload', "$root/lib/dropzone/UploadHandler.php");
 
-	elgg_register_action('comment/save', "$action_path/comment/save.php");
-	elgg_register_action('thewire/add', "$action_path/thewire/add.php");
-	elgg_register_action('thewire/delete', "$action_path/thewire/delete.php");
-	elgg_register_action('thewire/edit', "$action_path/thewire/edit.php");
-	elgg_register_action('like', "$action_path/likes/add.php");
-	elgg_register_action('unlike', "$action_path/likes/delete.php");
+	/**
+	 * Register actions
+	 */
+	$actions_path = "$root/actions";
+
+	elgg_register_action('comment/save', "$actions_path/comment/save.php");
+	elgg_register_action('thewire/add', "$actions_path/thewire/add.php");
+	elgg_register_action('thewire/delete', "$actions_path/thewire/delete.php");
+	elgg_register_action('thewire/edit', "$actions_path/thewire/edit.php");
+	elgg_register_action('like', "$actions_path/likes/add.php");
+	elgg_register_action('unlike', "$actions_path/likes/delete.php");
+
+	elgg_register_action('file/upload', "$actions_path/file/upload.php");
+	elgg_register_action('file/delete', "$actions_path/file/delete.php");
+
+	/**
+	 * Extend and register views
+	 */
 
 	elgg_extend_view('css/elgg', PLUGIN_ID . '/css');
 	elgg_extend_view('js/elgg', PLUGIN_ID . '/js');
@@ -74,10 +88,16 @@ function mfrb_template_init() {
 		'deps' => array('jquery')
 	));
 
+	elgg_define_js('dropzone', array(
+		'src' => '/mod/' . PLUGIN_ID . '/vendors/dropzone/dropzone-amd-module.min.js',
+		'deps' => array('jquery'),
+		'exports' => 'dropzone',
+	));
+
 	/*
 	 * Register librairies
 	 */
-	elgg_register_library('thewire', $root . '/lib/thewire.php');
+	elgg_register_library('thewire', "$root/lib/thewire.php");
 	elgg_register_library('elgg:groups', "$root/lib/groups.php");
 
 	/*
@@ -111,6 +131,12 @@ function mfrb_template_init() {
 	elgg_register_plugin_hook_handler('register', 'menu:river', 'mfrb_likes_river_menu_setup', 400);
 	// Register a URL handler for thewire posts
 	elgg_register_plugin_hook_handler('entity:url', 'object', 'thewire_set_url');
+
+	// hook to show pdf thumbnails
+	elgg_unregister_plugin_hook_handler('entity:icon:url', 'object', 'file_set_icon_url');
+	elgg_register_plugin_hook_handler('entity:icon:url', 'object', 'mfrb_override_file_icon');
+	// add file thumbnails to file object
+	elgg_register_plugin_hook_handler('to:object', 'entity', 'mfrb_json_file_object');
 
 	// Hook for page_owner
 	// ????? elgg_unregister_plugin_hook_handler('page_owner', 'system', 'default_page_owner_handler');
@@ -151,7 +177,7 @@ function mfrb_page_setup() {
 		elgg_unregister_menu_item('topbar', 'messages');
 
 		// menu messages
-		$text = '';
+		/*$text = '';
 		// get unread messages
 		$num_messages = 6; //(int)messages_count_unread();
 		if ($num_messages != 0) {
@@ -164,7 +190,7 @@ function mfrb_page_setup() {
 			'text' => $text,
 			'section' => 'alt',
 			'priority' => 99
-		));
+		));*/
 
 		// menu account with submenu
 		$user = elgg_get_logged_in_user_entity();

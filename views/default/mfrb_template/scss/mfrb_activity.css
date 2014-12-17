@@ -23,8 +23,11 @@
 	margin-bottom: 0;
 }
 .elgg-river-layout .elgg-main > .elgg-head {
-	padding-bottom: 20px;
 	margin-bottom: 20px;
+	border: none;
+}
+.elgg-river-layout .elgg-main > .elgg-head .elgg-foot {
+	border-bottom: 1px solid #EBEBEB;
 }
 .thewire-textarea {
 	resize: none;
@@ -314,5 +317,18 @@ div.elgg-menu-item-comment a:hover {
 	min-height: 18px;
 	font-size: .9em;
 	margin-top: 6px;
+}
+
+/**
+ * DROPZONE
+ */
+.toggle-dropzone {
+	color: #666;
+}
+.toggle-dropzone:hover {
+	text-decoration: none;
+}
+.filesbox {
+	margin: 0 2px;
 }
 

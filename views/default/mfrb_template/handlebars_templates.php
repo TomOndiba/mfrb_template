@@ -74,6 +74,13 @@
 						<time title="%pm %28 %b %2014 à %CEST" datetime="{{posted}}" time="{{posted}}">{{friendlytime}}</time>
 					</span>
 				</a>
+				{{#if mentions}}
+					<span class="elgg-river-timestamp float">&nbsp;<?php echo elgg_echo('thewire:mention:to'); ?>&nbsp;
+					{{#each mentions}}
+						<a href="{{url}}">{{name}}</a>
+					{{/each}}
+					</span>
+				{{/if}}
 				{{#if actions.edit}}
 				<span class="elgg-icon elgg-icon-delete link float-alt hidden"></span>
 				<a href="<?php echo $site_url; ?>action/thewire/edit?guid={{object_guid}}" class="elgg-button elgg-button-submit float-alt hidden" data-object_guid="{{object_guid}}"><?php echo elgg_echo('edit'); ?></a>
@@ -104,6 +111,22 @@
 					</div>
 				</div>
 			</a>
+			{{/if}}
+			{{#if files}}
+				<div class="elgg-river-files clearfloat">
+					{{#each files}}
+						<div class="elgg-image-block clearfix">
+							<a href="{{url}}">
+								<div class="elgg-image">
+										<img src="{{thumbnail}}" alt="{{title}}" title="{{title}}">
+								</div>
+								<div class="elgg-body">
+									<span class="elgg-subtext">{{title}}</span>
+								</div>
+							</a>
+						</div>
+					{{/each}}
+				</div>
 			{{/if}}
 			{{#if likes}}
 			<div class="elgg-river-likes fi-like pts pbrm">{{{likers_string}}}</div>

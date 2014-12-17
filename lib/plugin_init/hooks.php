@@ -157,9 +157,108 @@ function gravatar_avatar_hook($hook, $type, $url, $params) {
  * @return string
  */
 function thewire_set_url($hook, $type, $url, $params) {
-	$entity = $params['entity'];
-	if (elgg_instanceof($entity, 'object', 'thewire')) {
-		return "message/view/" . $entity->guid;
+	if (elgg_instanceof($params['entity'], 'object', 'thewire')) {
+		return "message/view/" . $params['entity']->guid;
 	}
 }
+
+
+
+/**
+ * Override the url for a wire post to return the thread
+ *
+ * @param string $hook
+ * @param string $type
+ * @param string $url
+ * @param array  $params
+ * @return string
+ */
+function mfrb_json_file_object($hook, $type, $return, $params) {
+	if (elgg_instanceof($params['entity'], 'object', 'file')) {
+		$return->thumbnail = elgg_format_url($params['entity']->getIconURL('small'));
+		$return->read_access = $params['entity']->read_access;
+	}
+	return $return;
+}
+
+
+
+/**
+ * Override the default entity icon for files
+ *
+ * Plugins can override or extend the icons using the plugin hook: 'file:icon:url', 'override'
+ *
+ * @param string $hook
+ * @param string $type
+ * @param string $url
+ * @param array  $params
+ * @return string Relative URL
+ */
+function mfrb_override_file_icon($hook, $type, $url, $params) {
+	$file = $params['entity'];
+	$size = $params['size'];
+	if (elgg_instanceof($file, 'object', 'file')) {
+
+		// thumbnails get first priority
+		if ($file->thumbnail) {
+			$ts = (int)$file->icontime;
+			return "mod/mfrb_template/thumbnail.php?file_guid=$file->guid&size=$size&icontime=$ts";
+		}
+
+		$mapping = array(
+			'application/excel' => 'excel',
+			'application/msword' => 'word',
+			'application/ogg' => 'music',
+			'application/pdf' => 'pdf',
+			'application/powerpoint' => 'ppt',
+			'application/vnd.ms-excel' => 'excel',
+			'application/vnd.ms-powerpoint' => 'ppt',
+			'application/vnd.oasis.opendocument.text' => 'openoffice',
+			'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'word',
+			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'excel',
+			'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'ppt',
+			'application/x-gzip' => 'archive',
+			'application/x-rar-compressed' => 'archive',
+			'application/x-stuffit' => 'archive',
+			'application/zip' => 'archive',
+
+			'text/directory' => 'vcard',
+			'text/v-card' => 'vcard',
+
+			'application' => 'application',
+			'audio' => 'music',
+			'text' => 'text',
+			'video' => 'video',
+		);
+
+		$mime = $file->mimetype;
+		if ($mime) {
+			$base_type = substr($mime, 0, strpos($mime, '/'));
+		} else {
+			$mime = 'none';
+			$base_type = 'none';
+		}
+
+		if (isset($mapping[$mime])) {
+			$type = $mapping[$mime];
+		} elseif (isset($mapping[$base_type])) {
+			$type = $mapping[$base_type];
+		} else {
+			$type = 'general';
+		}
+
+		if ($size == 'large') {
+			$ext = '_lrg';
+		} else {
+			$ext = '';
+		}
+
+		$url = "mod/file/graphics/icons/{$type}{$ext}.gif";
+		$url = elgg_trigger_plugin_hook('file:icon:url', 'override', $params, $url);
+		return $url;
+	}
+	return $url;
+}
+
+
 

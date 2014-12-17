@@ -80,7 +80,21 @@ function get_wire_object($item) {
 		);
 	}
 
+	$files = $object->getEntitiesFromRelationship(array(
+		'relationship' => 'file_attachment',
+		'inverse_relationship' => true
+	));
+	foreach ($files as $file) {
+		$item->files[] = $file->toObject();
+	}
 
+	$mentions = $object->getEntitiesFromRelationship(array(
+		'relationship' => 'mention',
+		'inverse_relationship' => true
+	));
+	foreach ($mentions as $user) {
+		$item->mentions[] = $user->toObject();
+	}
 
 	// Comments
 	$item->comments_count = $object->countComments();
