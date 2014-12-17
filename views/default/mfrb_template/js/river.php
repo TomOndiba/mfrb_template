@@ -136,7 +136,7 @@ elgg.river.init = function() {
 	})
 	.on('click', '.elgg-menu-item-thewire-edit a', function() {
 		var $eri = $('.elgg-layout:not(.hidden) .elgg-list-river:not(.hidden) .item-river-'+$(this).data('object_guid')),
-			$erm = $eri.find('.elgg-river-message');
+			$erm = $eri.find('.elgg-river-summary + .elgg-river-message');
 
 		$eri.find('.elgg-button-submit, .elgg-icon-delete').removeClass('hidden');
 		$erm.attr('contenteditable','true').focus();
@@ -181,9 +181,13 @@ elgg.river.submit = function(name, type, params, value) {
 			elgg.action('thewire/add', {
 				data: data,
 				success: function(json) {
+
+					form.find('.elgg-dropzone-preview').removeAttr('data-guid'); // usefull to say it's not removed by user
+					form.find('.elgg-input-dropzone').get(0).dropzone.removeAllFiles(true); //dz.removeAllFiles(true);
 					elgg.river.prepend_river(json.output);
 					form.find('.linkbox').addClass('hidden').html($('<div>', {'class': 'elgg-ajax-loader'}));
 					form.find('.thewire-textarea').val('').removeAttr('style');
+					if (typeof select2 !== 'undefined') form.find('.select2').select2('val', '');
 					linkParsed = null;
 				},
 				error: function(){
@@ -276,7 +280,7 @@ elgg.register_hook_handler('nodejs', 'message:new_comment', elgg.river.nodejs.ne
  */
 elgg.river.nodejs.edit_wire = function(hook, type, params, value) {
 	if (params.message.subject.guid != elgg.get_logged_in_user_guid() || !elgg.visibility.active) {
-		$('.item-river-'+params.message.object_guid).find('.elgg-river-message').html(params.message.message).river_highlight();
+		$('.item-river-'+params.message.object_guid).find('.elgg-river-summary + .elgg-river-message').html(params.message.message).river_highlight();
 	}
 	return value;
 };
@@ -323,7 +327,7 @@ users = [];
 elgg.river.store_user = function(user) {
 	if (!$.grep(users, function(e){ return e.guid === user.guid; }).length) {
 		user.id = user.guid; // usefull for select2
-		users.push(user);
+		if (user.id != elgg.get_logged_in_user_guid()) users.push(user); // don't store me
 	}
 };
 
@@ -485,14 +489,14 @@ elgg.history.register_direct_action('thewire/delete', {
 elgg.history.register_direct_action('thewire/edit', {
 	data: {
 		body: function() {
-			return elgg.history.data.$this.closest('.elgg-river-item').find('.elgg-river-message').html()
+			return elgg.history.data.$this.closest('.elgg-river-item').find('.elgg-river-summary + .elgg-river-message').html()
 		}
 	},
 	success: function(json) {
 		var $eri = $('.item-river-'+elgg.history.data.$this.data('object_guid'));
 
 		$eri.find('.elgg-button-submit, .elgg-icon-delete').addClass('hidden');
-		$eri.find('.elgg-river-message').removeAttr('contenteditable').river_highlight();
+		$eri.find('.elgg-river-summary + .elgg-river-message').removeAttr('contenteditable').river_highlight();
 	}
 });
 
